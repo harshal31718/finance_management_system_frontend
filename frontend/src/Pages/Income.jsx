@@ -1,24 +1,32 @@
 import React, { useState } from 'react'
-import Sheet from '../components/Sheet/Sheet';
+import TextField from '@mui/material/TextField';
+import Sheet from '../components/Sheet/Sheet'
 
-const Income = () => {
+const Income = ({ data }) => {
   let income_col = ["Date", "Source", "Amount", "Category", "Note"];
-  const [incomeData, setIncomeData] = useState([
-    [{ value: "1-1-23" },{value:"job"}, { value: 100 }, { value: "Job" }, { value: "Company" }],
-    [{ value: "2-1-23" },{value:"stock"}, { value: 103 }, { value: "Stocks" }, { value: "Cookies" }],
-    [{ value: "3-1-23" },{value:"job"}, { value: 105 }, { value: "Real Estate" }, { value: "dd" }],
-    [{ value: "4-1-23" },{value:"crypto"}, { value: 555 }, { value: "Crypto" }, { value: "Binance" }],
-    [{ value: "5-1-23" },{value:"job"}, { value: 21 }, { value: "MF" }, { value: "Grow" }],
-    [{ value: "6-1-23" },{value:"job"}, { value: 98880 }, { value: "Job" }, { value: "Company" }],
-  ]);
-  const updateIncome = (d) => {
-    console.log("changed");
-    // console.log(d);
-  }
+
+  const [startDate, setStartDate] = useState(new Date());
   return (
     <div className=''>
-      Income
-      <Sheet col={income_col} data={incomeData} update={updateIncome} />
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">New Income</h5>
+          <TextField
+            id="outlined-read-only-input"
+            label="Transaction ID"
+            defaultValue="888"
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <input className="" type='date' style={{padding:"14px"}} />
+          <TextField id="outlined-basic" label="Source" variant="outlined" />
+          <TextField id="outlined-basic" label="Amount" variant="outlined" />
+          <TextField id="outlined-basic" label="Category" variant="outlined" />
+          <TextField id="outlined-basic" label="Note" variant="outlined" />
+        </div>
+      </div>
+      <Sheet col={income_col} data={data} />
     </div>
   )
 }

@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import Sheet from '../components/Sheet/Sheet'
 
 const Expense = () => {
-  let expense_col = ["Date", "Amount", "Category", "Vendor", "Reason", "Note"];
+  let expense_col = ["Date", "Vendor", "Amount", "Category", "Note"];
   const [expenseData, setExpenseData] = useState([
-    [{ value: "1" }, { value: "Vanilla" }, { value: "Chocolate" }],
+    [{ value: "1" }, { value: "Vanilla" },  { value: "Chocolate" },{ value: "customisable" }],
     [{ value: "2" }, { value: "Vanilla" }, { value: "Chocolate" }],
     [{ value: "3" }, { value: "Vanilla" }, { value: "Chocolate" }],
     [{ value: "4" }, { value: "Vanilla" }, { value: "Chocolate" }],

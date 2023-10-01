@@ -59,7 +59,7 @@ const App = () => {
       <Header />
       <div className='m-0 p-2'>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Home transactions={transactions} assets={assets} liabilities={liabilities}/>} />
           <Route path='/income' element={<Income incomeData={transactions[0]} addIncome={addIncome} />} />
           <Route path='/expense' element={<Expense expenseData={transactions[1]} addExpense={addExpense} />} />
           <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />

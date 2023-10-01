@@ -1,32 +1,40 @@
 import React, { useState } from 'react'
-import TextField from '@mui/material/TextField';
 import Sheet from '../components/Sheet/Sheet'
 
-const Income = ({ data }) => {
-  let income_col = ["Date", "Source", "Amount", "Category", "Note"];
+const Income = ({ incomeData, addIncome }) => {
+  let incomeCol = ["Date", "Source", "Amount", "Category", "Note"];
+  const [newIncome, setNewIncome] = useState({});
 
-  const [startDate, setStartDate] = useState(new Date());
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setNewIncome((prevValues) => {
+      return {
+        ...prevValues,
+        [name]: value
+      };
+    });
+  }
+
   return (
-    <div className=''>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">New Income</h5>
-          <TextField
-            id="outlined-read-only-input"
-            label="Transaction ID"
-            defaultValue="888"
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <input className="" type='date' style={{padding:"14px"}} />
-          <TextField id="outlined-basic" label="Source" variant="outlined" />
-          <TextField id="outlined-basic" label="Amount" variant="outlined" />
-          <TextField id="outlined-basic" label="Category" variant="outlined" />
-          <TextField id="outlined-basic" label="Note" variant="outlined" />
-        </div>
+    <div className='income'>
+      <h5>New Income</h5>
+      <div className='form'>
+        <form onSubmit={(event) => {
+          if (newIncome.amount) {
+            addIncome(newIncome);
+            setNewIncome({ date: "", source: "", amount: "", category: "", note: "" });
+          }
+          event.preventDefault();
+        }}>
+          <input type='date' name='date' placeholder='Date' onChange={handleChange} value={newIncome.date} required />
+          <input type='text' name='source' placeholder='Source' onChange={handleChange} value={newIncome.source} required />
+          <input type='number' name='amount' placeholder='Amount' onChange={handleChange} value={newIncome.amount} required />
+          <input type='text' name='category' placeholder='Category' onChange={handleChange} value={newIncome.category} required />
+          <input type='text' name='note' placeholder='Note' onChange={handleChange} value={newIncome.note} />
+          <input type='submit' value='submit' />
+        </form>
       </div>
-      <Sheet col={income_col} data={data} />
+      <Sheet columns={incomeCol} data={incomeData} />
     </div>
   )
 }

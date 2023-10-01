@@ -1,0 +1,39 @@
+.sheet{
+    display: flex;
+    flex-direction: column;
+}
+.sheet div{
+    display: flex;
+    justify-content: center;
+    padding: 0 10px;
+}
+.table{
+    width: 1024px;
+    background: rgba(0,0,0,0.2);
+}
+.table:hover{
+    background: rgba(0,0,0,0.6);
+}
+thead{
+    color: white;
+    background: rgba(0, 0, 0, 0.8);
+}
+thead th{
+    margin: 0;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    align-items: center;
+}
+td p{
+    color: rgb(0, 0, 0);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+tr:hover{
+    background: rgba(255, 255, 255, 1);
+}
+

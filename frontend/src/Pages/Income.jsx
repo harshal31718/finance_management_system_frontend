@@ -3,7 +3,7 @@ import Sheet from '../components/Sheet/Sheet'
 
 const Income = ({ incomeData, addIncome }) => {
   let incomeCol = ["Date", "Source", "Amount", "Category", "Note"];
-  const [newIncome, setNewIncome] = useState({});
+  const [newIncome, setNewIncome] = useState({ date: "", source: "", amount: "", category: "", note: "" });
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -20,10 +20,8 @@ const Income = ({ incomeData, addIncome }) => {
       <h5>New Income</h5>
       <div className='form'>
         <form onSubmit={(event) => {
-          if (newIncome.amount) {
-            addIncome(newIncome);
-            setNewIncome({ date: "", source: "", amount: "", category: "", note: "" });
-          }
+          addIncome(newIncome);
+          setNewIncome({ date: "", source: "", amount: "", category: "", note: "" });
           event.preventDefault();
         }}>
           <input type='date' name='date' placeholder='Date' onChange={handleChange} value={newIncome.date} required />

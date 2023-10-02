@@ -11,15 +11,9 @@
     width: 1024px;
     background: rgba(0,0,0,0.2);
 }
-.table:hover{
-    background: rgba(0,0,0,0.6);
-}
-thead{
+
+th{
     color: white;
-    background: rgba(0, 0, 0, 0.8);
-}
-thead th{
-    margin: 0;
     padding: 10px;
     font-size: 16px;
     font-weight: 600;
@@ -33,7 +27,3 @@ td p{
     display: flex;
     align-items: center;
 }
-tr:hover{
-    background: rgba(255, 255, 255, 1);
-}
-

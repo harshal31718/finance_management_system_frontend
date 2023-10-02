@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const dataSchema = new mongoose.Schema({
+const dataSchema = new mongoose.Schema([{
     key: Number,
     id: Number,
     transactions: [
@@ -37,7 +37,7 @@ const dataSchema = new mongoose.Schema({
         monthlyIncome: Number,
         note: String,
     }],
-});
+}]);
 
 const Data = mongoose.model("Data", dataSchema);
 module.exports = Data;

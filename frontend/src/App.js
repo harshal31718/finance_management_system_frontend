@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Axios from 'axios';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header'
 import './App.css';
@@ -16,7 +17,7 @@ const App = () => {
       { date: "25-3-2202", source: "stock", amount: "10000", category: "investment", note: "asfdsa" },
       { date: "3-4-2023", source: "crypto", amount: "600000", category: "investment", note: "" },
       { date: "25-3-2202", source: "borrowed", amount: "100", category: "debt", note: "fdsafafasfa dasfadf ddsd" }
-    ], 
+    ],
     [
       { date: "3-4-2023", vendor: "amazon", amount: "200", category: "shopping", note: "" },
       { date: "25-3-2202", vendor: "flipkart", amount: "232", category: "online", note: "Some quick example text to build on the card title and make up the bulk of the card's content." },
@@ -34,6 +35,14 @@ const App = () => {
     { date: "23-4-4333", name: "helo", initialAmount: "22", details: "fasdfalkfhlasdh", monthlyMaintainance: "3", monthlyIncome: "3", note: "" },
     { date: "3-4-2023", name: "stockksss", initialAmount: "4444", details: "", monthlyMaintainance: "", monthlyIncome: "4", note: "thisssssssssssssssssssssssssssssssssssssssssss" }
   ]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:4000/getData")
+      .then((result) => {
+        console.log(result.data);
+      })
+      .catch((error) => { error = new Error(); })
+  }, []);
 
   const addIncome = (data) => {
     setTransactions((prev) => {
@@ -59,7 +68,7 @@ const App = () => {
       <Header />
       <div className='m-0 p-2'>
         <Routes>
-          <Route path='/' element={<Home transactions={transactions} assets={assets} liabilities={liabilities}/>} />
+          <Route path='/' element={<Home transactions={transactions} assets={assets} liabilities={liabilities} />} />
           <Route path='/income' element={<Income incomeData={transactions[0]} addIncome={addIncome} />} />
           <Route path='/expense' element={<Expense expenseData={transactions[1]} addExpense={addExpense} />} />
           <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />

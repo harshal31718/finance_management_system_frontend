@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const app = express();
 const port = process.env.Port || 4000;
@@ -10,7 +11,20 @@ app.use(express.json());
 app.use(cors());
 
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb://127.0.0.1/FMSDB", { useNewUrlParser: true });
+
+const url = "mongodb+srv://harshaldodke31718:Harshal123@cluster0.jfulnvb.mongodb.net/FMSDB";
+const connectionParams = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}
+// mongoose.connect("mongodb://127.0.0.1/FMSDB", { useNewUrlParser: true });
+mongoose.connect(url, connectionParams)
+  .then(() => {
+    console.log('Connected to the database ')
+  })
+  .catch((err) => {
+    console.error(`Error connecting to the database. n${err}`);
+  });
 
 const dataSchema = new mongoose.Schema({
   id: Number,

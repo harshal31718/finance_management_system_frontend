@@ -58,13 +58,43 @@ const dataSchema = new mongoose.Schema({
 });
 const Data = mongoose.model("Data", dataSchema);
 
-app.get("/getData", async (req, res) => {
+app.get("/login", async (req, res) => {
   // search user by emailId
   const emailId = req.query.emailId;
   await Data.find({ email: emailId }).exec().then((result) => {
+    // if (result.length == 0) {
+    //   console.log("creating user");
+    //   Data.create({
+    //     name: "harshal",
+    //     username: "444harshal",
+    //     email: emailId,
+    //     incomes: [],
+    //     expenses: [],
+    //     assets: [],
+    //     liabilities: [],
+    //   });
+    //   Data.find({ email: emailId }).exec().then((result) => res.send(result));
+    // } else {
     res.send(result);
+    // }
   });
 });
+
+app.get("/signup", async (req, res) => {
+  const name = req.query.emailId;
+  const username = req.query.emailId;
+  const emailId = req.query.emailId;
+  Data.create({
+    name: name,
+    username: username,
+    email: emailId,
+    incomes: [],
+    expenses: [],
+    assets: [],
+    liabilities: [],
+  });
+  Data.find({ email: emailId }).exec().then((result) => res.send(result));
+})
 
 app.post("/addData", async (req, res) => {
   const newdata = req.body.data;

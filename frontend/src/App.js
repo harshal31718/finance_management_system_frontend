@@ -14,25 +14,28 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
 
+  const [newUser, setNewUser] = useState({ name: "", username: "" });
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setNewUser((prevValues) => {
+      return {
+        ...prevValues,
+        [name]: value
+      };
+    });
+  }
+
   const [localData, setLocalData] = useState({});
   const [incomes, setIncomes] = useState([{}]);
   const [expenses, setExpenses] = useState([{}]);
   const [assets, setAssets] = useState([{}]);
   const [liabilities, setLiabilities] = useState([{}]);
 
-  // useEffect(() => {
-  //   Axios.get("http://localhost:4000/getData")
-  //     .then((result) => {
-  //       setCurrentUser({ name: result.data[0].name, email: result.data[0].email });
-  //       setIncomes(result.data[0].incomes);
-  //       setExpenses(result.data[0].expenses);
-  //       setAssets(result.data[0].assets);
-  //       setLiabilities(result.data[0].liabilities);
-  //     })
-  //     .catch((error) => { error = new Error(); })
-  // }, []);
+  const signUp=()=>{
 
-  const login = useGoogleLogin({
+  }
+
+  const logIn = useGoogleLogin({
     onSuccess: (codeResponse) => setUser(codeResponse),
     onError: (error) => console.log('Login Failed:', error)
   });
@@ -48,7 +51,7 @@ const App = () => {
         .then((res) => {
           const email = res.data.email;
           setProfile(res.data);
-          Axios.get("http://localhost:4000/getData", { params: { emailId: email } })
+          Axios.get("http://localhost:4000/login", { params: { emailId: email } })
             .then((result) => {
               setLocalData({ name: result.data[0].name, email: result.data[0].email, username: result.data[0].username });
               setIncomes(result.data[0].incomes);
@@ -112,8 +115,24 @@ const App = () => {
           </>
         ) : (
           <>
-            <h2>Google Login</h2>
-            <button onClick={() => login()}>Sign in with Google 🚀 </button>
+            <div className='container d-flex align-items-center'>
+              <div className='w-25 bg-primary'>
+                <h2>Log in</h2>
+                <button onClick={() => logIn()}>Sign in with Google</button>
+              </div>
+              <div className='w-25 bg-secondary'>
+                <h2>Sign up</h2>
+                <form onSubmit={(event) => {
+                  signUp();
+                  setNewUser({ name: "", username: "" });
+                  event.preventDefault();
+                }}>
+                  <input type='text' name='name' placeholder='Name' onChange={handleChange} value={newUser.name} required />
+                  <input type='text' name='username' placeholder='Username' onChange={handleChange} value={newUser.username} required />
+                  <input type='submit' value='Sign Up With Google' />
+                </form>
+              </div>
+            </div>
           </>
         )}
       </div>

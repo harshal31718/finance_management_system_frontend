@@ -60,63 +60,52 @@ const Data = mongoose.model("Data", dataSchema);
 
 app.get("/login", async (req, res) => {
   // search user by emailId
-  const emailId = req.query.emailId;
-  await Data.find({ email: emailId }).exec().then((result) => {
-    // if (result.length == 0) {
-    //   console.log("creating user");
-    //   Data.create({
-    //     name: "harshal",
-    //     username: "444harshal",
-    //     email: emailId,
-    //     incomes: [],
-    //     expenses: [],
-    //     assets: [],
-    //     liabilities: [],
-    //   });
-    //   Data.find({ email: emailId }).exec().then((result) => res.send(result));
-    // } else {
-    res.send(result);
-    // }
+  const email = req.query.email;
+  // console.log(email);
+  const name = req.query.name;
+  // console.log(name);
+  // const username = req.query.username;
+  await Data.find({ email: email }).exec().then((result) => {
+    if (result.length == 0) {
+      console.log("creating user");
+      Data.create({
+        name: name,
+        // username: username,
+        email: email,
+        incomes: [],
+        expenses: [],
+        assets: [],
+        liabilities: [],
+      });
+      Data.find({ email: email }).exec().then((result) => res.send(result));
+    } else {
+      res.send(result);
+    }
   });
 });
 
-app.get("/signup", async (req, res) => {
-  const name = req.query.emailId;
-  const username = req.query.emailId;
-  const emailId = req.query.emailId;
-  Data.create({
-    name: name,
-    username: username,
-    email: emailId,
-    incomes: [],
-    expenses: [],
-    assets: [],
-    liabilities: [],
-  });
-  Data.find({ email: emailId }).exec().then((result) => res.send(result));
-})
-
 app.post("/addData", async (req, res) => {
-  const newdata = req.body.data;
   const property = req.body.property;
+  const newdata = req.body.data;
+  const email = req.body.email;
 
   if (property === "income") {
-    await Data.find({}).exec().then((result) => {
+    await Data.find({ email: email }).exec().then((result) => {
       result[0].incomes.push(newdata);
       result[0].save();
     });
   } else if (property === "expense") {
-    await Data.find({}).exec().then((result) => {
+    await Data.find({ email: email }).exec().then((result) => {
       result[0].expenses.push(newdata);
       result[0].save();
     });
   } else if (property === "asset") {
-    await Data.find({}).exec().then((result) => {
+    await Data.find({ email: email }).exec().then((result) => {
       result[0].assets.push(newdata);
       result[0].save();
     });
   } else if (property === "liability") {
-    await Data.find({}).exec().then((result) => {
+    await Data.find({ email: email }).exec().then((result) => {
       result[0].liabilities.push(newdata);
       result[0].save();
     });

@@ -7,7 +7,7 @@ const Home = ({ profile, incomes, expenses, assets, liabilities }) => {
       <div className='info'>
         <h3>Dashboard</h3>
         <h6>Name: {profile.name}</h6>
-        <h6>User Name: {profile.username}</h6>
+        {/* <h6>User Name: {profile.username}</h6> */}
         <h6>Email: {profile.email}</h6>
       </div>
       <div className='container bg-black bg-opacity-50' >

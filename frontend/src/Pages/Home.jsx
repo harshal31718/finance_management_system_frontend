@@ -1,10 +1,15 @@
 import React from 'react'
 import List from '../components/List/List'
 
-const Home = ({ incomes, expenses, assets, liabilities }) => {
+const Home = ({ profile, incomes, expenses, assets, liabilities }) => {
   return (
-    <div>
-      <h3>Dashboard</h3>
+    <div className='home'>
+      <div className='info'>
+        <h3>Dashboard</h3>
+        <h6>Name: {profile.name}</h6>
+        <h6>User Name: {profile.username}</h6>
+        <h6>Email: {profile.email}</h6>
+      </div>
       <div className='container bg-black bg-opacity-50' >
         <div className='row m-0 p-1'>
           <div className='col bg-white m-2'>

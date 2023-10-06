@@ -24,7 +24,10 @@
     "react-spreadsheet": "^0.8.6",
     "react-virtualized": "^9.22.5",
     "scheduler": "^0.23.0",
-    "web-vitals": "^2.1.4"
+    "simple-datatables": "^8.0.0",
+    "web-vitals": "^2.1.4",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -51,6 +54,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "html-loader": "^4.2.0"
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { DataTable } from "simple-datatables" // "https://github.com/fiduswriter/Simple-DataTables"
 import { FaRupeeSign } from 'react-icons/fa'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
@@ -7,8 +7,10 @@ import './Sheet.css';
 
 
 const Sheet = ({ columns, data }) => {
-  const dataTable = new DataTable('#myTable');
-  function sorting(col) { };
+
+  useEffect(() => {
+    const dataTable = new DataTable('#myTable');
+  }, []);
 
   return (
     <table id="myTable" class="display" >
@@ -22,14 +24,15 @@ const Sheet = ({ columns, data }) => {
           <th>Salary</th>
         </tr>
       </thead>
-      <tbody><tr class="odd">
-        <td>Airi</td>
-        <td>Satou</td>
-        <td>Accountant</td>
-        <td>Tokyo</td>
-        <td>28th Nov 08</td>
-        <td>$162,700</td>
-      </tr>
+      <tbody>
+        <tr class="">
+          <td>Airi</td>
+          <td>Satou</td>
+          <td>Accountant</td>
+          <td>Tokyo</td>
+          <td>28th Nov 08</td>
+          <td>$162,700</td>
+        </tr>
         <tr class="even">
           <td>Angelica</td>
           <td>Ramos</td>
@@ -113,6 +116,7 @@ const Sheet = ({ columns, data }) => {
         </tr>
       </tfoot>
     </table>
+
     // <div className='sheet'>
     //   <div>
     //     <table className='table'>
@@ -145,3 +149,4 @@ const Sheet = ({ columns, data }) => {
 }
 
 export default Sheet
+

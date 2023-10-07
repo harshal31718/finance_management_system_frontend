@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const Axios = require("axios");
 
 const app = express();
 const port = process.env.Port || 4000;
@@ -58,31 +59,51 @@ const dataSchema = new mongoose.Schema({
 });
 const Data = mongoose.model("Data", dataSchema);
 
+let prevUser = null;
+app.get("/user", (req, res) => {
+  res.send(prevUser);
+})
+
 app.get("/login", async (req, res) => {
-  // search user by emailId
-  const email = req.query.email;
-  // console.log(email);
-  const name = req.query.name;
-  // console.log(name);
-  // const username = req.query.username;
-  await Data.find({ email: email }).exec().then((result) => {
-    if (result.length == 0) {
-      console.log("creating user");
-      Data.create({
-        name: name,
-        // username: username,
-        email: email,
-        incomes: [],
-        expenses: [],
-        assets: [],
-        liabilities: [],
-      });
-      Data.find({ email: email }).exec().then((result) => res.send(result));
-    } else {
-      res.send(result);
+  const user = req.query.user;
+  prevUser = user;
+  Axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+    headers: {
+      Authorization: `Bearer ${user.access_token}`,
+      Accept: 'application/json'
     }
-  });
+  })
+    .then(async (response) => {
+      const profile = {
+        id: response.data.id,
+        email: response.data.email,
+        name: response.data.name,
+        picture: response.data.picture,
+      }
+      await Data.find({ email: profile.email }).exec().then((userData) => {
+        if (userData.length == 0) {
+          console.log("creating user");
+          Data.create({
+            name: profile.name,
+            email: profile.email,
+            incomes: [],
+            expenses: [],
+            assets: [],
+            liabilities: [],
+          });
+          Data.find({ email: profile.email }).exec().then((userData) => res.send({ userData, profile }));
+        } else {
+          console.log("sending user");
+          res.send({ userData, profile });
+        }
+      });
+    })
+    .catch((err) => console.log(err));
 });
+
+app.post("/logout", async (req, res) => {
+  prevUser = null;
+})
 
 app.post("/addData", async (req, res) => {
   const property = req.body.property;

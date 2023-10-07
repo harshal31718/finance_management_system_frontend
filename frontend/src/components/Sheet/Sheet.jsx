@@ -1,150 +1,109 @@
-import React, { useEffect } from 'react'
-import { DataTable } from "simple-datatables" // "https://github.com/fiduswriter/Simple-DataTables"
-import { FaRupeeSign } from 'react-icons/fa'
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import React, { useState } from 'react'
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { FilterMatchMode } from 'primereact/api';
+import TextField from '@mui/material/TextField';
 
-import './Sheet.css';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
-const Sheet = ({ columns, data }) => {
+const Sheet = ({ type, columns, data, add }) => {
+  const [filters, setFilters] = useState({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [newEntry, setNewEntry] = useState({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
 
-  useEffect(() => {
-    const dataTable = new DataTable('#myTable');
-  }, []);
+  const paginatorLeft = <IconButton aria-label="delete" size="small"><FileDownloadIcon fontSize="medium" /></IconButton>;
+  const paginatorRight = <IconButton aria-label="delete" size="small"><RefreshIcon fontSize="medium" /></IconButton>;
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+    _filters['global'].value = value;
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+  };
 
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setNewEntry((prevValues) => {
+      return {
+        ...prevValues,
+        [name]: value
+      };
+    });
+  }
   return (
-    <table id="myTable" class="display" >
-      <thead>
-        <tr>
-          <th>First name</th>
-          <th>Last name</th>
-          <th>Position</th>
-          <th>Office</th>
-          <th>Start date</th>
-          <th>Salary</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="">
-          <td>Airi</td>
-          <td>Satou</td>
-          <td>Accountant</td>
-          <td>Tokyo</td>
-          <td>28th Nov 08</td>
-          <td>$162,700</td>
-        </tr>
-        <tr class="even">
-          <td>Angelica</td>
-          <td>Ramos</td>
-          <td>Chief Executive Officer (CEO)</td>
-          <td>London</td>
-          <td>9th Oct 09</td>
-          <td>$1,200,000</td>
-        </tr>
-        <tr class="odd">
-          <td>Ashton</td>
-          <td>Cox</td>
-          <td>Junior Technical Author</td>
-          <td>San Francisco</td>
-          <td>12th Jan 09</td>
-          <td>$86,000</td>
-        </tr>
-        <tr class="even">
-          <td>Bradley</td>
-          <td>Greer</td>
-          <td>Software Engineer</td>
-          <td>London</td>
-          <td>13th Oct 12</td>
-          <td>$132,000</td>
-        </tr>
-        <tr class="odd">
-          <td>Brenden</td>
-          <td>Wagner</td>
-          <td>Software Engineer</td>
-          <td>San Francisco</td>
-          <td>7th Jun 11</td>
-          <td>$206,850</td>
-        </tr>
-        <tr class="even">
-          <td>Brielle</td>
-          <td>Williamson</td>
-          <td>Integration Specialist</td>
-          <td>New York</td>
-          <td>2nd Dec 12</td>
-          <td>$372,000</td>
-        </tr>
-        <tr class="odd">
-          <td>Bruno</td>
-          <td>Nash</td>
-          <td>Software Engineer</td>
-          <td>London</td>
-          <td>3rd May 11</td>
-          <td>$163,500</td>
-        </tr>
-        <tr class="even">
-          <td>Caesar</td>
-          <td>Vance</td>
-          <td>Pre-Sales Support</td>
-          <td>New York</td>
-          <td>12th Dec 11</td>
-          <td>$106,450</td>
-        </tr>
-        <tr class="odd">
-          <td>Cara</td>
-          <td>Stevens</td>
-          <td>Sales Assistant</td>
-          <td>New York</td>
-          <td>6th Dec 11</td>
-          <td>$145,600</td>
-        </tr>
-        <tr class="even">
-          <td>Cedric</td>
-          <td>Kelly</td>
-          <td>Senior Javascript Developer</td>
-          <td>Edinburgh</td>
-          <td>29th Mar 12</td>
-          <td>$433,060</td>
-        </tr>
-      </tbody><tfoot>
-        <tr>
-          <th>First name</th>
-          <th>Last name</th>
-          <th>Position</th>
-          <th>Office</th>
-          <th>Start date</th>
-          <th>Salary</th>
-        </tr>
-      </tfoot>
-    </table>
-
-    // <div className='sheet'>
-    //   <div>
-    //     <table className='table'>
-    //       <thead>
-    //         <tr>
-    //           {columns.map((col, i) => (
-    //             <th className='bg-black text-white' onClick={() => sorting("com")} >{col}</th>
-    //           ))}
-    //           <th className='bg-black text-white' onClick={() => sorting("com")} ></th>
-    //         </tr>
-    //       </thead>
-    //       <tbody>
-    //         {data.length > 0 && (
-    //           data.map((row, i) =>
-    //             <tr>
-    //               <td className=' ' ><p>{row.date}</p></td>
-    //               <td ><p>{row.source || row.vendor}</p></td>
-    //               <td ><p><FaRupeeSign />{row.amount}</p></td>
-    //               <td ><p>{row.category}</p></td>
-    //               <td ><p>{row.note}</p></td>
-    //               <td><button type="button" class="btn btn-danger btn-sm"><DeleteOutlinedIcon /></button></td>
-    //             </tr>
-    //           )
-    //         )}
-    //       </tbody>
-    //     </table>
-    //   </div>
-    // </div>
+    <div className='card'>
+      <div className='d-flex'>
+        <div className="card w-75 p-1 m-0">
+          <form onSubmit={(event) => {
+            add(newEntry);
+            setNewEntry({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
+            event.preventDefault();
+          }}>
+            <div className='container p-0 m-0'>
+              <div className='row p-0 m-0'>
+                <div className="col p-1 m-0">
+                  <input className='m-0 px-2 h-100 w-100 border border-dark rounded bg-transparent' id='date' type='date' name='date' value={newEntry.date} placeholder="Date" onChange={handleChange} required />
+                </div>
+                <div className="col p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100 ' id={type === "income" ? "source" : "vendor"} name={type === "income" ? "source" : "vendor"} value={type === "income" ? newEntry.incom : newEntry.vendor} label={type === "income" ? "Source" : "Vendor"} onChange={handleChange} size="small" required />
+                </div>
+                <div className="col p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100' id="amount" type="number" name='amount' value={newEntry.amount} label="Amount" onChange={handleChange} size="small" required />
+                </div>
+              </div>
+              <div className='row p-0 m-0'>
+                <div className="col-5 p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100' id="category" name='category' value={newEntry.category} label="Category" onChange={handleChange} size="small" required />
+                </div>
+                <div className="col-5 p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100' id="note" name='note' value={newEntry.note} label="Note" onChange={handleChange} size="small" />
+                </div>
+                <div className="col p-1 m-0 d-flex justify-content-center">
+                  <Button className='m-0 p-0 h-100 w-100' type='submit' variant="contained"><AddIcon /> {type}</Button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div className="card w-25 d-flex align-items-center justify-content-center">
+          <TextField
+            className='p-1 m-0'
+            value={globalFilterValue}
+            onChange={onGlobalFilterChange}
+            label="Keyword Search"
+            InputProps={{ startAdornment: (<InputAdornment position="start"><SearchOutlinedIcon /></InputAdornment>), }} />
+        </div>
+      </div>
+      <div className='card mx-2'>
+        <DataTable
+          value={data}
+          size={"small"}
+          paginator
+          rows={5} rowsPerPageOptions={[5, 10, 25, 50]}
+          paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}
+          removableSort
+          sortField='date'
+          sortOrder={-1}
+          filters={filters}
+          globalFilterFields={['date', 'source', 'vendor', 'amount', 'category']}
+          emptyMessage="No Data Found."
+          tableStyle={{ minWidth: '50rem' }}
+        >
+          {columns.map((col, i) => (
+            <Column key={i} field={col} sortable header={col.toUpperCase()} style={{ width: '20%' }} />
+          ))}
+        </DataTable>
+      </div>
+    </div>
   );
 }
 

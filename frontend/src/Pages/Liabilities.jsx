@@ -1,7 +1,11 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import Cards from '../components/Cards/Cards';
 
-const Liabilities = ({liabilitiesData,addLiability}) => {
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+
+const Liabilities = ({ liabilitiesData, addLiability }) => {
   const [newLiability, setNewLiability] = useState({ date: "", name: "", initialAmount: "", details: "", monthlyMaintainance: "", monthlyIncome: "", note: "" });
 
   function handleChange(event) {
@@ -14,27 +18,51 @@ const Liabilities = ({liabilitiesData,addLiability}) => {
     });
   }
   return (
-    // cost to date income to date
-    <div className='Liabilities'>
-      <h5>New Liability</h5>
-      <div className='form'>
-        <form onSubmit={(event) => {
-          addLiability(newLiability);
-          setNewLiability({ date: "", name: "", initialAmount: "", details: "", monthlyMaintainance: "", monthlyIncome: "", note: "" });
-          event.preventDefault();
-        }}>
-          <input type='date' name='date' placeholder='Date of Investment' onChange={handleChange} value={newLiability.date} required />
-          <input type='text' name='name' placeholder='Name' onChange={handleChange} value={newLiability.name} required />
-          <input type='number' name='initialAmount' placeholder='Initial Amount' onChange={handleChange} value={newLiability.initialAmount} required />
-          <input type='text' name='details' placeholder='Details' onChange={handleChange} value={newLiability.details} required />
-          <input type='number' name='monthlyMaintainance' placeholder='Monthly Maintainance' onChange={handleChange} value={newLiability.monthlyMaintainance} required />
-          <input type='number' name='monthlyIncome' placeholder='Monthly Income' onChange={handleChange} value={newLiability.monthlyIncome} required />
-          {/* <input type='text' name='category' placeholder='Category' onChange={handleChange} value={newLiability.category} required /> */}
-          <input type='text' name='note' placeholder='Note' onChange={handleChange} value={newLiability.note} />
-          <input type='submit' value='submit' />
-        </form>
+    <div className='liabilities'>
+      <h5>Manage Liabilities</h5>
+      <div className='card'>
+        <div className='card d-flex justify-content-center align-items-center'>
+          <form onSubmit={(event) => {
+            addLiability(newLiability);
+            setNewLiability({ date: "", name: "", initialAmount: "", details: "", monthlyMaintainance: "", monthlyIncome: "", note: "" });
+            event.preventDefault();
+          }}>
+            <div className='container p-0 m-0'>
+              <div className='row p-0 m-0'>
+                <div className="col p-1 m-0">
+                  <input className='m-0 px-2 h-100 w-100 border border-dark rounded bg-transparent' id='date' type='date' name='date' value={newLiability.date} onChange={handleChange} required />
+                </div>
+                <div className="col p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100 ' id="name" name="name" value={newLiability.name} label="Name" onChange={handleChange} size="small" required />
+                </div>
+                <div className="col p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100' id="details" name='details' value={newLiability.details} label="Details" onChange={handleChange} size="small" required />
+                </div>
+              </div>
+              <div className='row p-0 m-0'>
+                <div className="col p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100' id="initialAmount" type="number" name='initialAmount' value={newLiability.initialAmount} label="Initital Amount" onChange={handleChange} size="small" required />
+                </div>
+                <div className="col p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100' id="monthlyMaintainance" type="number" name='monthlyMaintainance' value={newLiability.monthlyMaintainance} label="Monthly Maintainance" onChange={handleChange} size="small" required />
+                </div>
+                <div className="col p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100' id="monthlyIncome" type="number" name='monthlyIncome' value={newLiability.monthlyIncome} label="Monthly Income" onChange={handleChange} size="small" required />
+                </div>
+                <div className="col p-1 m-0">
+                  <TextField className='m-0 p-0 h-100 w-100' id="note" name='note' value={newLiability.note} label="Note" onChange={handleChange} size="small" />
+                </div>
+                <div className="col p-1 m-0 d-flex justify-content-center">
+                  <Button className='m-0 p-0 h-100 w-100' type='submit' variant="contained"><AddIcon /> Liability</Button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div className='card mx-2'>
+          <Cards data={liabilitiesData} />
+        </div>
       </div>
-      <Cards data={liabilitiesData}/>
     </div>
   )
 }

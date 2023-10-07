@@ -1,3 +1,4 @@
+// https://primereact.org/
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
@@ -50,33 +51,6 @@ const App = () => {
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     Axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${user.access_token}`,
-  //         Accept: 'application/json'
-  //       }
-  //     })
-  //       .then((res) => {
-  //         const email = res.data.email;
-  //         const name = res.data.name;
-  //         // const username = localData.username;
-  //         setProfile(res.data);
-  //         Axios.get("http://localhost:4000/login", { params: { email: email, name: name } })
-  //           .then((result) => {
-  //             setLocalData({ name: result.data[0].name, email: result.data[0].email });
-  //             setIncomes(result.data[0].incomes);
-  //             setExpenses(result.data[0].expenses);
-  //             setAssets(result.data[0].assets);
-  //             setLiabilities(result.data[0].liabilities);
-  //           })
-  //           .catch((error) => { error = new Error(); });
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }
-  // }, [user]);
-
   const logOut = () => {
     googleLogout();
     Axios.post("http://localhost:4000/logout");
@@ -113,7 +87,7 @@ const App = () => {
             <Header logOut={logOut} />
             <div className='m-0 p-2'>
               <Routes>
-                <Route path='/home' element={<Home profile={profile} incomes={incomes} expenses={expenses} assets={assets} liabilities={liabilities} />} />
+                <Route path='/' element={<Home profile={profile} incomes={incomes} expenses={expenses} assets={assets} liabilities={liabilities} />} />
                 <Route path='/income' element={<Income incomeData={incomes} addIncome={addIncome} />} />
                 <Route path='/expense' element={<Expense expenseData={expenses} addExpense={addExpense} />} />
                 <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />

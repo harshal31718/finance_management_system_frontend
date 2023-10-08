@@ -133,4 +133,32 @@ app.post("/addData", async (req, res) => {
   }
 });
 
+app.delete("/deleteData", async (req, res) => {
+  const property = req.body.property;
+  const newdata = req.body.data;
+  const email = req.body.email;
+
+  if (property === "income") {
+    await Data.find({ email: email }).exec().then((result) => {
+      result[0].incomes.push(newdata);
+      result[0].save();
+    });
+  } else if (property === "expense") {
+    await Data.find({ email: email }).exec().then((result) => {
+      result[0].expenses.push(newdata);
+      result[0].save();
+    });
+  } else if (property === "asset") {
+    await Data.find({ email: email }).exec().then((result) => {
+      result[0].assets.push(newdata);
+      result[0].save();
+    });
+  } else if (property === "liability") {
+    await Data.find({ email: email }).exec().then((result) => {
+      result[0].liabilities.push(newdata);
+      result[0].save();
+    });
+  }
+});
+
 app.listen(port, () => console.log(`Server started on port ${port}`));

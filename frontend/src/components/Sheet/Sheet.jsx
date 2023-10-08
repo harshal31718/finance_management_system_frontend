@@ -13,20 +13,16 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
-const Sheet = ({ type, columns, data, add }) => {
-  const [filters, setFilters] = useState({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
-  const [globalFilterValue, setGlobalFilterValue] = useState('');
+const Sheet = ({ type, columns, data, addTransaction, editTransaction, deleteTransaction }) => {
   const [newEntry, setNewEntry] = useState({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [filters, setFilters] = useState({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
+  const [deleteRow, setDeleteRow] = useState(null);
+  // const [editRowId, setEditRowId] = useState(null);
+  // const [editRow, setEditRow] = useState({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
 
   const paginatorLeft = <IconButton aria-label="delete" size="small"><FileDownloadIcon fontSize="medium" /></IconButton>;
   const paginatorRight = <IconButton aria-label="delete" size="small"><RefreshIcon fontSize="medium" /></IconButton>;
-  const onGlobalFilterChange = (e) => {
-    const value = e.target.value;
-    let _filters = { ...filters };
-    _filters['global'].value = value;
-    setFilters(_filters);
-    setGlobalFilterValue(value);
-  };
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -37,12 +33,73 @@ const Sheet = ({ type, columns, data, add }) => {
       };
     });
   }
+
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+    _filters['global'].value = value;
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+  };
+
+  // const textEditor = (options) => {
+  //   // console.log("textEditor");
+  //   // if (true) {
+  //   return (
+  //     <TextField
+  //       type="text"
+  //       value={options.value}
+  //       onChange={(e) => {
+  //         options.editorCallback(e.target.value);
+  //         const name = options.field;
+  //         const value = e.target.value;
+  //         console.log(name + " " + value);
+  //         setEditRow((prevValues) => {
+  //           return {
+  //             ...prevValues,
+  //             [name]: value
+  //           };
+  //         });
+  //       }}
+  //     // size='small'
+  //     />
+  //   );
+  //   // }
+  // };
+
+  // const onRowEditComplete = async (e) => {
+  //   const currId = e.data._id;
+  //   console.log("start");
+  //   console.log(editRow);
+  //   console.log(editRowId);
+  //   console.log(currId);
+  //   if (editRowId === currId) {
+  //     console.log("complete");
+  //     setEditRowId(() => (null));
+  //     setEditRow(() => ({ date: "", source: "", vendor: "", amount: "", category: "", note: "" }));
+  //   }
+  //   console.log(editRow);
+  //   console.log(editRowId);
+  //   console.log('end');
+  // };
+
+  const validateDelete = () => {
+    return true;
+  }
+  const onRowDelete = (e) => {
+    const value = e.value;
+    setDeleteRow(value);
+    if (validateDelete()) {
+      deleteTransaction(value._id);
+    }
+  };
+
   return (
     <div className='card'>
       <div className='d-flex'>
         <div className="card w-75 p-1 m-0">
           <form onSubmit={(event) => {
-            add(newEntry);
+            addTransaction(newEntry);
             setNewEntry({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
             event.preventDefault();
           }}>
@@ -85,22 +142,45 @@ const Sheet = ({ type, columns, data, add }) => {
         <DataTable
           value={data}
           size={"small"}
-          paginator
+          paginator // layout
           rows={5} rowsPerPageOptions={[5, 10, 25, 50]}
           paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
           currentPageReportTemplate="{first} to {last} of {totalRecords}"
           paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}
-          removableSort
+          removableSort // sort
           sortField='date'
           sortOrder={-1}
-          filters={filters}
+          filters={filters} // global search
           globalFilterFields={['date', 'source', 'vendor', 'amount', 'category']}
           emptyMessage="No Data Found."
+          // editMode="row" // row Edit
+          // onRowEditComplete={onRowEditComplete}
+          selectionMode='radiobutton' // row Delete
+          selection={deleteRow}
+          onSelectionChange={onRowDelete}
           tableStyle={{ minWidth: '50rem' }}
         >
-          {columns.map((col, i) => (
-            <Column key={i} field={col} sortable header={col.toUpperCase()} style={{ width: '20%' }} />
-          ))}
+          {columns.map((col, i) => {
+            console.log(1)
+            return (
+              <Column
+                key={i}
+                field={col}
+                header={col.toUpperCase()}
+                sortable
+                // editor={(options) => {
+                //   console.log("editor");
+                //   // console.log(options);
+                //   if (editRowId === null) setEditRowId(options.rowData._id);
+                //   if (editRowId === options.rowData._id) return textEditor(options)
+                //   return <h6>hello</h6>
+                // }}
+                style={{ width: '20%' }}
+              />)
+          }
+          )}
+          <Column selectionMode="single" headerStyle={{ width: "3rem" }} />
+          {/* <Column rowEditor headerStyle={{ Width: '3rem' }} bodyStyle={{ textAlign: 'center' }} /> */}
         </DataTable>
       </div>
     </div>

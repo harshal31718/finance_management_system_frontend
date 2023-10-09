@@ -145,7 +145,7 @@ app.post("/deleteData", async (req, res) => {
   }
   if (property === "expense") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].expenses = result[0].incomes.filter((element) => element._id.toString() !== id);
+      result[0].expenses = result[0].expenses.filter((element) => element._id.toString() !== id);
       result[0].save();
     });
   }

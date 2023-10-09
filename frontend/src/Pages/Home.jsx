@@ -3,32 +3,31 @@ import List from '../components/List/List'
 
 const Home = ({ profile, incomes, expenses, assets, liabilities }) => {
   return (
-    <div className='home'>
-      <div className='info'>
-        <h3>Dashboard</h3>
-        <h6>Name: {profile.name}</h6>
-        {/* <h6>User Name: {profile.username}</h6> */}
-        <h6>Email: {profile.email}</h6>
+    <div className='home d-flex flex-column'>
+      <div className='m-0 p-1'>
+        <h4>Dashboard</h4>
       </div>
-      <div className='container bg-black bg-opacity-50' >
-        <div className='row m-0 p-1'>
-          <div className='col bg-white m-2'>
-            <h4>Incomes</h4>
-            <List data={incomes} />
-          </div>
-          <div className='col bg-white m-2'>
-            <h4>Expenses</h4>
-            <List data={expenses} />
-          </div>
+      <div className='d-flex'>
+        <div className='m-0 p-1'>
+          <h6>Name: {profile.name}</h6>
+          <h6>Email: {profile.email}</h6>
         </div>
-        <div className='row m-0 p-1'>
-          <div className='col bg-white m-2'>
-            <h4>Assets</h4>
-            <List data={assets} />
+        <div className='container p-1 bg-primary bg-opacity-25' >
+          <div className='row m-0 p-0'>
+            <div className='col m-1 p-0' style={{ height: "30vh" }}>
+              <List type="income" data={incomes} />
+            </div>
+            <div className='col m-1 p-0' style={{ height: "30vh" }}>
+              <List type="expense" data={expenses} />
+            </div>
           </div>
-          <div className='col bg-white m-2'>
-            <h4>Liabilities</h4>
-            <List data={liabilities} />
+          <div className='row m-0 p-0'>
+            <div className='col m-1 p-0' style={{ height: "30vh" }}>
+              <List type="asset" data={assets} />
+            </div>
+            <div className='col m-1 p-0' style={{ height: "30vh" }}>
+              <List type="liabilitie" data={liabilities} />
+            </div>
           </div>
         </div>
       </div>

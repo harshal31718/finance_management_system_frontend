@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { FilterMatchMode } from 'primereact/api';
@@ -7,11 +7,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
+import { ConfirmDialog } from "primereact/confirmdialog";
+import { Toast } from "primereact/toast";
+
 import InputAdornment from '@mui/material/InputAdornment';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { Dialog } from 'primereact/dialog';
 
 const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
   const [newEntry, setNewEntry] = useState({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
@@ -19,6 +21,17 @@ const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
   const [filters, setFilters] = useState({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
   const [deleteRowId, setDeleteRowId] = useState(null);
   const [visible, setVisible] = useState(false);
+  const toast = useRef(null);
+
+  const deleteRow = () => {
+    toast.current.show({
+      severity: "error",
+      summary: "Successfully Deleted",
+      life: 3000
+    });
+    deleteTransaction(deleteRowId);
+    setDeleteRowId(null);
+  };
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -86,26 +99,8 @@ const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
         </div>
       </div>
       <div className='card mx-2'>
-        <Dialog
-          header="Confirm Deletion"
-          visible={visible}
-          onHide={() => setVisible(false)}
-          style={{ width: '30vw' }}
-          breakpoints={{ '960px': '75vw', '641px': '100vw' }}
-        >
-          <div className='d-flex justify-content-center m-0 p-0'>
-            <button
-              type="button"
-              className="btn btn-danger m-1"
-              onClick={() => {
-                deleteTransaction(deleteRowId);
-                setVisible(false);
-              }}
-            >
-              Yes
-            </button>
-          </div>
-        </Dialog>
+        <Toast ref={toast} />
+        <ConfirmDialog visible={visible} onHide={() => setVisible(false)} header="Delete Confirmation" icon="pi pi-info-circle" message="Do you want to delete this record?" acceptClassName="p-button-danger" accept={deleteRow} position='right' />
         <DataTable
           value={data}
           size={"small"}
@@ -143,7 +138,7 @@ const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
             }
             )
           }
-          <Column selectionMode="single" onClick={() => setVisible(true)} headerStyle={{ width: "3rem" }} />
+          <Column selectionMode="single" headerStyle={{ width: "3rem" }} />
         </DataTable>
       </div>
     </div>

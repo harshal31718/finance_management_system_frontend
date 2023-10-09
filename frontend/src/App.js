@@ -65,7 +65,7 @@ const App = () => {
   }
   const deleteIncome = (id) => {
     setIncomes(() => incomes.filter((element) => element._id !== id));
-    // Axios.post("http://localhost:4000/deleteData", { property: "income", id, email: profile.email });
+    Axios.post("http://localhost:4000/deleteData", { property: "income", id, email: profile.email });
   }
   const addExpense = (data) => {
     setExpenses((prev) => [...prev, data]);
@@ -73,7 +73,7 @@ const App = () => {
   }
   const deleteExpense = (id) => {
     setExpenses(() => expenses.filter((element) => element._id !== id));
-    // Axios.post("http://localhost:4000/deleteData", { property: "expense", id, email: profile.email });
+    Axios.post("http://localhost:4000/deleteData", { property: "expense", id, email: profile.email });
   }
   const addAsset = (data) => {
     setAssets((prev) => [...prev, data]);

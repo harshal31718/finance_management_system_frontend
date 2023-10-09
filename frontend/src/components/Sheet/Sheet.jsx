@@ -8,21 +8,17 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
 import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { Dialog } from 'primereact/dialog';
 
-const Sheet = ({ type, columns, data, addTransaction, editTransaction, deleteTransaction }) => {
+const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
   const [newEntry, setNewEntry] = useState({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [filters, setFilters] = useState({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
-  const [deleteRow, setDeleteRow] = useState(null);
-  // const [editRowId, setEditRowId] = useState(null);
-  // const [editRow, setEditRow] = useState({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
-
-  const paginatorLeft = <IconButton aria-label="delete" size="small"><FileDownloadIcon fontSize="medium" /></IconButton>;
-  const paginatorRight = <IconButton aria-label="delete" size="small"><RefreshIcon fontSize="medium" /></IconButton>;
+  const [deleteRowId, setDeleteRowId] = useState(null);
+  const [visible, setVisible] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -42,57 +38,8 @@ const Sheet = ({ type, columns, data, addTransaction, editTransaction, deleteTra
     setGlobalFilterValue(value);
   };
 
-  // const textEditor = (options) => {
-  //   // console.log("textEditor");
-  //   // if (true) {
-  //   return (
-  //     <TextField
-  //       type="text"
-  //       value={options.value}
-  //       onChange={(e) => {
-  //         options.editorCallback(e.target.value);
-  //         const name = options.field;
-  //         const value = e.target.value;
-  //         console.log(name + " " + value);
-  //         setEditRow((prevValues) => {
-  //           return {
-  //             ...prevValues,
-  //             [name]: value
-  //           };
-  //         });
-  //       }}
-  //     // size='small'
-  //     />
-  //   );
-  //   // }
-  // };
-
-  // const onRowEditComplete = async (e) => {
-  //   const currId = e.data._id;
-  //   console.log("start");
-  //   console.log(editRow);
-  //   console.log(editRowId);
-  //   console.log(currId);
-  //   if (editRowId === currId) {
-  //     console.log("complete");
-  //     setEditRowId(() => (null));
-  //     setEditRow(() => ({ date: "", source: "", vendor: "", amount: "", category: "", note: "" }));
-  //   }
-  //   console.log(editRow);
-  //   console.log(editRowId);
-  //   console.log('end');
-  // };
-
-  const validateDelete = () => {
-    return true;
-  }
-  const onRowDelete = (e) => {
-    const value = e.value;
-    setDeleteRow(value);
-    if (validateDelete()) {
-      deleteTransaction(value._id);
-    }
-  };
+  const paginatorLeft = <button type="button" className="btn btn-light"><FileDownloadIcon fontSize="medium" /></button>;
+  const paginatorRight = <button type="button" className="btn btn-light"><RefreshIcon fontSize="medium" /></button>;
 
   return (
     <div className='card'>
@@ -139,48 +86,64 @@ const Sheet = ({ type, columns, data, addTransaction, editTransaction, deleteTra
         </div>
       </div>
       <div className='card mx-2'>
+        <Dialog
+          header="Confirm Deletion"
+          visible={visible}
+          onHide={() => setVisible(false)}
+          style={{ width: '30vw' }}
+          breakpoints={{ '960px': '75vw', '641px': '100vw' }}
+        >
+          <div className='d-flex justify-content-center m-0 p-0'>
+            <button
+              type="button"
+              className="btn btn-danger m-1"
+              onClick={() => {
+                deleteTransaction(deleteRowId);
+                setVisible(false);
+              }}
+            >
+              Yes
+            </button>
+          </div>
+        </Dialog>
         <DataTable
           value={data}
           size={"small"}
           paginator // layout
-          rows={5} rowsPerPageOptions={[5, 10, 25, 50]}
           paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
           currentPageReportTemplate="{first} to {last} of {totalRecords}"
           paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}
+          rows={5} rowsPerPageOptions={[5, 10, 25, 50]}
           removableSort // sort
           sortField='date'
           sortOrder={-1}
           filters={filters} // global search
           globalFilterFields={['date', 'source', 'vendor', 'amount', 'category']}
           emptyMessage="No Data Found."
-          // editMode="row" // row Edit
-          // onRowEditComplete={onRowEditComplete}
           selectionMode='radiobutton' // row Delete
-          selection={deleteRow}
-          onSelectionChange={onRowDelete}
+          selection={deleteRowId}
+          onSelectionChange={(e) => {
+            setVisible(true);
+            const id = e.value._id;
+            setDeleteRowId(id);
+          }}
           tableStyle={{ minWidth: '50rem' }}
         >
-          {columns.map((col, i) => {
-            console.log(1)
-            return (
-              <Column
-                key={i}
-                field={col}
-                header={col.toUpperCase()}
-                sortable
-                // editor={(options) => {
-                //   console.log("editor");
-                //   // console.log(options);
-                //   if (editRowId === null) setEditRowId(options.rowData._id);
-                //   if (editRowId === options.rowData._id) return textEditor(options)
-                //   return <h6>hello</h6>
-                // }}
-                style={{ width: '20%' }}
-              />)
+          {
+            columns.map((col, i) => {
+              console.log(1)
+              return (
+                <Column
+                  key={i}
+                  field={col}
+                  header={col.toUpperCase()}
+                  sortable
+                  style={{ width: '20%' }}
+                />)
+            }
+            )
           }
-          )}
-          <Column selectionMode="single" headerStyle={{ width: "3rem" }} />
-          {/* <Column rowEditor headerStyle={{ Width: '3rem' }} bodyStyle={{ textAlign: 'center' }} /> */}
+          <Column selectionMode="single" onClick={() => setVisible(true)} headerStyle={{ width: "3rem" }} />
         </DataTable>
       </div>
     </div>

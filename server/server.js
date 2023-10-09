@@ -133,29 +133,19 @@ app.post("/addData", async (req, res) => {
   }
 });
 
-app.delete("/deleteData", async (req, res) => {
+app.post("/deleteData", async (req, res) => {
   const property = req.body.property;
-  const newdata = req.body.data;
+  const id = req.body.id;
   const email = req.body.email;
-
   if (property === "income") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].incomes.push(newdata);
+      result[0].incomes = result[0].incomes.filter((element) => element._id.toString() !== id);
       result[0].save();
     });
-  } else if (property === "expense") {
+  }
+  if (property === "expense") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].expenses.push(newdata);
-      result[0].save();
-    });
-  } else if (property === "asset") {
-    await Data.find({ email: email }).exec().then((result) => {
-      result[0].assets.push(newdata);
-      result[0].save();
-    });
-  } else if (property === "liability") {
-    await Data.find({ email: email }).exec().then((result) => {
-      result[0].liabilities.push(newdata);
+      result[0].expenses = result[0].incomes.filter((element) => element._id.toString() !== id);
       result[0].save();
     });
   }

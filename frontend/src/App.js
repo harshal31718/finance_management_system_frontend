@@ -4,7 +4,6 @@ import Axios from 'axios';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header'
-import './App.css';
 import Login from './Pages/Login';
 import Home from './Pages/Home'
 import Income from './Pages/Income';

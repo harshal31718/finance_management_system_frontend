@@ -10,6 +10,7 @@ import Income from './Pages/Income';
 import Expense from './Pages/Expense'
 import Assets from './Pages/Assets'
 import Liabilities from './Pages/Liabilities'
+import NewTransaction from './components/NewTransaction/NewTransaction';
 
 const App = () => {
   // google useStates
@@ -89,7 +90,7 @@ const App = () => {
         {(user && profile) ? (
           <>
             <Header logOut={logOut} />
-            <div className='px-3' style={{marginTop:"56px"}}>
+            <div className='px-3' style={{ marginTop: "56px" }}>
               <Routes>
                 <Route path='/' element={<Home profile={profile} incomes={incomes} expenses={expenses} assets={assets} liabilities={liabilities} />} />
                 <Route path='/income' element={<Income incomeData={incomes} addIncome={addIncome} deleteIncome={deleteIncome} />} />
@@ -97,6 +98,7 @@ const App = () => {
                 <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />
                 <Route path='/liabilities' element={<Liabilities liabilitiesData={liabilities} addLiability={addLiability} />} />
               </Routes>
+              <NewTransaction addIncome={addIncome} addExpense={addExpense} />
             </div>
           </>
         ) : (<Login logIn={logIn} />)}

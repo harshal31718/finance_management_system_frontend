@@ -2,7 +2,7 @@ import React from 'react'
 import Sheet from '../components/Sheet/Sheet'
 
 const Income = ({ incomeData, addIncome, deleteIncome }) => {
-  let incomeCol = ["date", "source", "amount", "category", "note"];
+  let incomeCol = ["date", "amount", "category", "subCategory", "description"];
   return (
     <div className='income'>
       <h5>Manage Incomes</h5>

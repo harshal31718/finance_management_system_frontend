@@ -16,7 +16,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
 const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
-  const [newEntry, setNewEntry] = useState({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
+  const [newEntry, setNewEntry] = useState({ date: "", amount: "", category: "", subCategory: "", note: "" });
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [filters, setFilters] = useState({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
   const [deleteRowId, setDeleteRowId] = useState(null);
@@ -60,27 +60,27 @@ const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
         <div className="card w-75 p-1 m-0">
           <form onSubmit={(event) => {
             addTransaction(newEntry);
-            setNewEntry({ date: "", source: "", vendor: "", amount: "", category: "", note: "" });
+            setNewEntry({ date: "", amount: "", category: "", subCategory: "", description: "" });
             event.preventDefault();
           }}>
             <div className='container p-0 m-0'>
               <div className='row p-0 m-0'>
                 <div className="col p-1 m-0">
-                  <input className='m-0 px-2 h-100 w-100 border border-dark rounded bg-transparent' id='date' type='date' name='date' value={newEntry.date} placeholder="Date" onChange={handleChange} required />
+                  <input className='m-0 px-2 h-100 w-100 border border-dark rounded bg-transparent' type='date' id='date' name='date' value={newEntry.date} placeholder="Date" onChange={handleChange} required />
                 </div>
                 <div className="col p-1 m-0">
-                  <TextField className='m-0 p-0 h-100 w-100 ' id={type === "income" ? "source" : "vendor"} name={type === "income" ? "source" : "vendor"} value={type === "income" ? newEntry.incom : newEntry.vendor} label={type === "income" ? "Source" : "Vendor"} onChange={handleChange} size="small" required />
+                  <TextField className='m-0 p-0 h-100 w-100' type="number" id="amount" name='amount' value={newEntry.amount} label="Amount" onChange={handleChange} size="small" required />
                 </div>
                 <div className="col p-1 m-0">
-                  <TextField className='m-0 p-0 h-100 w-100' id="amount" type="number" name='amount' value={newEntry.amount} label="Amount" onChange={handleChange} size="small" required />
+                  <TextField className='m-0 p-0 h-100 w-100' id="category" name='category' value={newEntry.category} label="Category" onChange={handleChange} size="small" required />
                 </div>
               </div>
               <div className='row p-0 m-0'>
                 <div className="col-5 p-1 m-0">
-                  <TextField className='m-0 p-0 h-100 w-100' id="category" name='category' value={newEntry.category} label="Category" onChange={handleChange} size="small" required />
+                  <TextField className='m-0 p-0 h-100 w-100 ' id="subCategory" name="subCategory" value={newEntry.subCategory} label={(type === "income") ? "Source" : "Vendor"} onChange={handleChange} size="small" required />
                 </div>
                 <div className="col-5 p-1 m-0">
-                  <TextField className='m-0 p-0 h-100 w-100' id="note" name='note' value={newEntry.note} label="Note" onChange={handleChange} size="small" />
+                  <TextField className='m-0 p-0 h-100 w-100' id="description" name='description' value={newEntry.description} label="Discription" onChange={handleChange} size="small" />
                 </div>
                 <div className="col p-1 m-0 d-flex justify-content-center">
                   <Button className='m-0 p-0 h-100 w-100' type='submit' variant="contained"><AddIcon /> {type}</Button>
@@ -113,7 +113,7 @@ const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
           sortField='date'
           sortOrder={-1}
           filters={filters} // global search
-          globalFilterFields={['date', 'source', 'vendor', 'amount', 'category']}
+          globalFilterFields={['date', 'amount', 'category', 'subCategory', 'description']}
           emptyMessage="No Data Found."
           selectionMode='radiobutton' // row Delete
           selection={deleteRowId}
@@ -126,12 +126,11 @@ const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
         >
           {
             columns.map((col, i) => {
-              console.log(1)
               return (
                 <Column
                   key={i}
                   field={col}
-                  header={col.toUpperCase()}
+                  header={(col === "subCategory") ? (type==="income"?"SOURCE":"VENDOR") : col.toUpperCase()}
                   sortable
                   style={{ width: '20%' }}
                 />)

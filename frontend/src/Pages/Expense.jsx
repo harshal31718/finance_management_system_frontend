@@ -2,7 +2,7 @@ import React from 'react'
 import Sheet from '../components/Sheet/Sheet'
 
 const Expense = ({ expenseData, addExpense, deleteExpense }) => {
-  let expenseCol = ["date", "vendor", "amount", "category", "note"];
+  let expenseCol = ["date", "amount", "category","subCategory", "description"];
   return (
     <div className='expense'>
       <h5>Manage Expenses</h5>

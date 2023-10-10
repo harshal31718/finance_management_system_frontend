@@ -26,17 +26,17 @@ const dataSchema = new mongoose.Schema({
   email: String,
   incomes: [{
     date: String,
-    source: String,
     amount: Number,
     category: String,
-    note: String,
+    subCategory: String,
+    description: String,
   }],
   expenses: [{
     date: String,
-    vendor: String,
     amount: Number,
     category: String,
-    note: String,
+    subCategory: String,
+    description: String,
   }],
   assets: [{
     date: String,

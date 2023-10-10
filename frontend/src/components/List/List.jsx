@@ -26,7 +26,7 @@ const List = ({ type, data }) => {
 
     return (
         <div className="card m-0 p-0 w-100 h-100">
-            <NavLink className="nav-link font-bold block m-1" to={"/" + type}>{type.toUpperCase()}S PRIVIEW</NavLink>
+            <NavLink className="nav-link font-bold block m-1" to={"/" + type}>{type.toUpperCase()}S PREVIEW</NavLink>
             <div className='m-0 p-0 w-100 h-100'>
                 <VirtualScroller
                     items={data}

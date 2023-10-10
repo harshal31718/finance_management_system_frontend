@@ -7,10 +7,10 @@ import { OverlayPanel } from "primereact/overlaypanel";
 const Header = ({ logOut }) => {
     const profileOP = useRef(null);
     return (
-        <div className="header container p-0 " style={{ maxWidth: "1000px" }}>
+        <div className="header container fixed-top bg-white" style={{ maxWidth: "100%" }}>
             <div className="row">
-                <div className="col-10 navbar navbar-expand-lg navbar-light bg-light m-0 my-2 p-0 pl-3 bg-white">
-                    <NavLink className="navbar-brand p-0" to="/home">FMS</NavLink>
+                <div className="col-10 navbar navbar-expand-lg">
+                    <NavLink className="navbar-brand p-0" to="/">FMS</NavLink>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -34,7 +34,7 @@ const Header = ({ logOut }) => {
                         </ul>
                     </div>
                 </div>
-                <div className="col-2 d-flex justify-content-end align-items-top m-0 my-3 p-0 pr-3 bg-white">
+                <div className="col-2 d-flex justify-content-end align-items-top">
                     <Avatar icon="pi pi-user" shape="circle" onClick={(e) => profileOP.current.toggle(e)} style={{ backgroundColor: '#222222', color: '#ffffff', width: '40px', height: "40px" }} />
                     <OverlayPanel ref={profileOP}>
                         <div>

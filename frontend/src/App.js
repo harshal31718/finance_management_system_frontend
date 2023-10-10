@@ -89,7 +89,7 @@ const App = () => {
         {(user && profile) ? (
           <>
             <Header logOut={logOut} />
-            <div className='m-0 p-2'>
+            <div className='px-3' style={{marginTop:"56px"}}>
               <Routes>
                 <Route path='/' element={<Home profile={profile} incomes={incomes} expenses={expenses} assets={assets} liabilities={liabilities} />} />
                 <Route path='/income' element={<Income incomeData={incomes} addIncome={addIncome} deleteIncome={deleteIncome} />} />

@@ -84,6 +84,14 @@ const App = () => {
     Axios.post("http://localhost:4000/addData", { property: "liability", data, email: profile.email });
   }
 
+  const addUploadedData = (uploadData) => {
+    const data = JSON.parse(uploadData);
+    data.map(obj => {
+      if (obj.credit === null) setExpenses((prev) => [...prev, { date: obj.date, amount: obj.debit, category: "others", subCategory: "others", description: obj.details, }]);
+      else setIncomes((prev) => [...prev, { date: obj.date, amount: obj.credit, category: "others", subCategory: "others", description: obj.details, }]);
+    });
+    Axios.post("http://localhost:4000/addUploadedData", { data, email: profile.email });
+  }
   return (
     <BrowserRouter>
       <div className='login'>
@@ -98,8 +106,8 @@ const App = () => {
                 <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />
                 <Route path='/liabilities' element={<Liabilities liabilitiesData={liabilities} addLiability={addLiability} />} />
               </Routes>
-              <NewTransaction addIncome={addIncome} addExpense={addExpense} />
             </div>
+            <NewTransaction addUploadedData={addUploadedData} addIncome={addIncome} addExpense={addExpense} />
           </>
         ) : (<Login logIn={logIn} />)}
       </div>

@@ -133,6 +133,35 @@ app.post("/addData", async (req, res) => {
   }
 });
 
+app.post("/addUploadedData", async (req, res) => {
+  const newData = req.body.data;
+  const email = req.body.email;
+
+  await Data.find({ email: email }).exec().then((result) => {
+    newData.map(obj => {
+      if (obj.credit === null) {
+        result[0].expenses.push({
+          date: obj.date,
+          amount: obj.debit,
+          category: "others",
+          subCategory: "others",
+          description: obj.details,
+        });
+      }
+      else {
+        result[0].incomes.push({
+          date: obj.date,
+          amount: obj.credit,
+          category: "others",
+          subCategory: "others",
+          description: obj.details,
+        });
+      }
+    });
+    result[0].save();
+  });
+});
+
 app.post("/deleteData", async (req, res) => {
   const property = req.body.property;
   const id = req.body.id;

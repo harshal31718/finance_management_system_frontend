@@ -5,31 +5,16 @@ import { Dialog } from "primereact/dialog";
 import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
 
-const NewTransaction = ({ addIncome, addExpense }) => {
+const NewTransaction = ({ addUploadedData, addIncome, addExpense }) => {
     const [newTransactionEntry, setNewTransactionEntry] = useState({ date: "", amount: "", category: "", subCategory: "", description: "" });
+    const [uploadDialog, setUploadDialog] = useState(false);
     const [incomeDialog, setIncomeDialog] = useState(false);
     const [expenseDialog, setExpenseDialog] = useState(false);
+
     const menuRight = useRef(null);
     const toast = useRef(null);
-    const items = [
-        {
-            label: "Upload Excel",
-            icon: "pi pi-upload",
-            command: (e) => {
-                //react-prime fileupload
-            }
-        },
-        {
-            label: "New Income",
-            icon: "pi pi-angle-double-up",
-            command: () => setIncomeDialog(true)
-        },
-        {
-            label: "New Expense",
-            icon: "pi pi-angle-double-down",
-            command: () => setExpenseDialog(true)
-        }
-    ];
+
+    const items = [{ label: "Upload Transactions.json", icon: "pi pi-upload", command: () => setUploadDialog(true) }, { label: "New Income", icon: "pi pi-angle-double-up", command: () => setIncomeDialog(true) }, { label: "New Expense", icon: "pi pi-angle-double-down", command: () => setExpenseDialog(true) }];
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -43,7 +28,33 @@ const NewTransaction = ({ addIncome, addExpense }) => {
 
     return (
         <div className="position-fixed bottom-0 end-0 m-3" style={{ position: "fixed" }}>
-            <Toast ref={toast} position="bottom-right"></Toast>
+            <Toast ref={toast} position='bottom-right' />
+            <Dialog
+                header="Upload JSON"
+                visible={uploadDialog}
+                onHide={() => setUploadDialog(false)}
+                style={{ width: "275px" }}
+            >
+                <div className='container'>
+                    <input
+                        className="form-control form-control-sm bg-primary border w-100"
+                        type="file"
+                        onChange={(e) => {
+                            const fileReader = new FileReader();
+                            fileReader.readAsText(e.target.files[0], "UTF-8");
+                            fileReader.onload = (e) => {
+                                const result = e.target.result;
+                                addUploadedData(result);
+                            };
+                            setUploadDialog(false);
+                            toast.current.show({
+                                severity: "success",
+                                summary: "JSON Added",
+                                life: 3000
+                            });
+                        }} />
+                </div>
+            </Dialog>
             <Dialog
                 header="New Income"
                 visible={incomeDialog}
@@ -96,7 +107,7 @@ const NewTransaction = ({ addIncome, addExpense }) => {
                 breakpoints={{ "960px": "75vw", "641px": "100vw" }}
             >
                 <form onSubmit={(event) => {
-                     toast.current.show({
+                    toast.current.show({
                         severity: "success",
                         summary: "Expense Added",
                         life: 3000
@@ -132,13 +143,7 @@ const NewTransaction = ({ addIncome, addExpense }) => {
                     </div>
                 </form>
             </Dialog>
-            <Menu
-                model={items}
-                popup
-                ref={menuRight}
-                id="popup_menu_right"
-                popupAlignment="right"
-            />
+            <Menu model={items} popup ref={menuRight} id="popup_menu_right" popupAlignment="right" />
             <button className="btn btn-light" type="button" onClick={(event) => menuRight.current.toggle(event)}><AddIcon /></button>
         </div>
     )

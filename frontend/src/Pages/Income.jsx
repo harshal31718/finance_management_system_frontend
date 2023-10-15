@@ -2,11 +2,10 @@ import React from 'react'
 import Sheet from '../components/Sheet/Sheet'
 
 const Income = ({ incomeData, addIncome, deleteIncome }) => {
-  let incomeCol = ["date", "amount", "category", "subCategory", "description"];
   return (
     <div className='income'>
       <h5>Manage Incomes</h5>
-      <Sheet type="income" columns={incomeCol} data={incomeData} addTransaction={addIncome} deleteTransaction={deleteIncome} />
+      <Sheet type="income" data={incomeData} addTransaction={addIncome} deleteTransaction={deleteIncome} />
     </div>
   )
 }

@@ -14,14 +14,26 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 
-const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
+const Sheet = ({ type, data, addTransaction, deleteTransaction }) => {
   const [newEntry, setNewEntry] = useState({ date: "", amount: "", category: "", subCategory: "", note: "" });
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [filters, setFilters] = useState({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
   const [deleteRowId, setDeleteRowId] = useState(null);
   const [visible, setVisible] = useState(false);
   const toast = useRef(null);
+
+  const onRowEditComplete = (e) => {
+    console.log("edit");
+    // let _products = [...products];
+    // let { newData, index } = e;
+
+    // _products[index] = newData;
+
+    // setProducts(_products);
+  };
 
   const deleteRow = () => {
     toast.current.show({
@@ -115,6 +127,8 @@ const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
           filters={filters} // global search
           globalFilterFields={['date', 'amount', 'category', 'subCategory', 'description']}
           emptyMessage="No Data Found."
+          editMode="row"
+          onRowEditComplete={onRowEditComplete}
           selectionMode='radiobutton' // row Delete
           selection={deleteRowId}
           onSelectionChange={(e) => {
@@ -124,20 +138,13 @@ const Sheet = ({ type, columns, data, addTransaction, deleteTransaction }) => {
           }}
           tableStyle={{ minWidth: '50rem' }}
         >
-          {
-            columns.map((col, i) => {
-              return (
-                <Column
-                  key={i}
-                  field={col}
-                  header={(col === "subCategory") ? (type==="income"?"SOURCE":"VENDOR") : col.toUpperCase()}
-                  sortable
-                  style={{ width: '20%' }}
-                />)
-            }
-            )
-          }
-          <Column selectionMode="single" headerStyle={{ width: "3rem" }} />
+          <Column key="1" field="date" header="DATE" sortable style={{ width: '20%' }} />
+          <Column key="2" field="amount" header="AMOUNT" sortable style={{ width: '20%' }} />
+          <Column key="3" field="category" header="CATEGORY" sortable style={{ width: '20%' }} />
+          <Column key="4" field="subCategory" header={(type === "income") ? "SOURCE" : "VENDOR"} sortable style={{ width: '20%' }} />
+          <Column key="5" field="description" header="DESCRIPTION" sortable style={{ width: '20%' }} />
+          <Column key="6" header={<DeleteForeverIcon />} selectionMode="single" headerStyle={{ width: "2rem" }} />
+          <Column key="7" header={<EditIcon />} rowEditor style={{ width: '10%', minWidth: '5rem'}} />
         </DataTable>
       </div>
     </div>

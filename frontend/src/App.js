@@ -11,6 +11,7 @@ import Expense from './Pages/Expense'
 import Assets from './Pages/Assets'
 import Liabilities from './Pages/Liabilities'
 import NewTransaction from './components/NewTransaction/NewTransaction';
+import Categories from './Pages/Categories';
 
 const App = () => {
   // google useStates
@@ -122,6 +123,7 @@ const App = () => {
                 <Route path='/expense' element={<Expense expenseData={expenses} addExpense={addExpense} editExpense={editExpense} deleteExpense={deleteExpense} />} />
                 <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />
                 <Route path='/liabilities' element={<Liabilities liabilitiesData={liabilities} addLiability={addLiability} />} />
+                <Route path='/categories' element={<Categories />} />
               </Routes>
             </div>
             <NewTransaction addUploadedData={addUploadedData} addIncome={addIncome} addExpense={addExpense} />

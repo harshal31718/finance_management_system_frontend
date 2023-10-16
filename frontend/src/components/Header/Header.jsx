@@ -31,6 +31,9 @@ const Header = ({ logOut }) => {
                             <li className="nav-item">
                                 <NavLink className="nav-link" to="/liabilities">Liabilities</NavLink>
                             </li>
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/categories">Categories</NavLink>
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -63,6 +63,14 @@ const App = () => {
     setIncomes((prev) => [...prev, data]);
     Axios.post("http://localhost:4000/addData", { property: "income", data, email: profile.email });
   }
+  const editIncome = (data) => {
+    const id = data._id;
+    setIncomes((prev) => {
+      prev = prev.filter((element) => element._id !== id);
+      return [...prev, data]
+    })
+    Axios.post("http://localhost:4000/editData", { property: "income", data, email: profile.email });
+  }
   const deleteIncome = (id) => {
     setIncomes(() => incomes.filter((element) => element._id !== id));
     Axios.post("http://localhost:4000/deleteData", { property: "income", id, email: profile.email });
@@ -70,6 +78,14 @@ const App = () => {
   const addExpense = (data) => {
     setExpenses((prev) => [...prev, data]);
     Axios.post("http://localhost:4000/addData", { property: "expense", data, email: profile.email });
+  }
+  const editExpense = (data) => {
+    const id = data._id;
+    setExpenses((prev) => {
+      prev = prev.filter((element) => element._id !== id);
+      return [...prev, data]
+    })
+    Axios.post("http://localhost:4000/editData", { property: "expense", data, email: profile.email });
   }
   const deleteExpense = (id) => {
     setExpenses(() => expenses.filter((element) => element._id !== id));
@@ -101,8 +117,8 @@ const App = () => {
             <div className='px-3' style={{ marginTop: "56px" }}>
               <Routes>
                 <Route path='/' element={<Home profile={profile} incomes={incomes} expenses={expenses} assets={assets} liabilities={liabilities} />} />
-                <Route path='/income' element={<Income incomeData={incomes} addIncome={addIncome} deleteIncome={deleteIncome} />} />
-                <Route path='/expense' element={<Expense expenseData={expenses} addExpense={addExpense} deleteExpense={deleteExpense} />} />
+                <Route path='/income' element={<Income incomeData={incomes} addIncome={addIncome} editIncome={editIncome} deleteIncome={deleteIncome} />} />
+                <Route path='/expense' element={<Expense expenseData={expenses} addExpense={addExpense} editExpense={editExpense} deleteExpense={deleteExpense} />} />
                 <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />
                 <Route path='/liabilities' element={<Liabilities liabilitiesData={liabilities} addLiability={addLiability} />} />
               </Routes>

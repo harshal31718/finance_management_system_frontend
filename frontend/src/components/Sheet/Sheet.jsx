@@ -87,20 +87,47 @@ const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction 
 
   const SheetHeader = (
     <div className='d-flex align-items-center justify-content-between '>
-      <div>
-        <h4>MANAGE {type.toUpperCase()}</h4>
+      <div className="card w-75 p-1 m-0">
+        <form onSubmit={addRow}>
+          <div className='container p-0 m-0'>
+            <div className='row p-0 m-0'>
+              <div className="col p-1 m-0">
+                <input className='m-0 px-2 h-100 w-100 border border-dark rounded bg-transparent' type='date' id='date' name='date' value={newEntry.date} placeholder="Date" onChange={handleAdd} required />
+              </div>
+              <div className="col p-1 m-0">
+                <TextField className='m-0 p-0 h-100 w-100' type="number" id="amount" name='amount' value={newEntry.amount} label="Amount" onChange={handleAdd} size="small" required />
+              </div>
+              <div className="col p-1 m-0">
+                <TextField className='m-0 p-0 h-100 w-100' id="category" name='category' value={newEntry.category} label="Category" onChange={handleAdd} size="small" required />
+              </div>
+            </div>
+            <div className='row p-0 m-0'>
+              <div className="col-5 p-1 m-0">
+                <TextField className='m-0 p-0 h-100 w-100 ' id="subCategory" name="subCategory" value={newEntry.subCategory} label={(type === "income") ? "Source" : "Vendor"} onChange={handleAdd} size="small" required />
+              </div>
+              <div className="col-5 p-1 m-0">
+                <TextField className='m-0 p-0 h-100 w-100' id="description" name='description' value={newEntry.description} label="Discription" onChange={handleAdd} size="small" />
+              </div>
+              <div className="col p-1 m-0 d-flex justify-content-center">
+                <button className='btn btn-primary h-100 w-100' type='submit' variant="contained">NEW {type.toUpperCase()}</button>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
-      <div>
-        <TextField
-          className='p-1 m-0'
-          value={globalFilterValue}
-          onChange={onGlobalFilterChange}
-          label="Keyword Search"
-          InputProps={{ startAdornment: (<InputAdornment position="start"><SearchOutlinedIcon /></InputAdornment>), }}
-        />
-      </div>
-      <div>
-        <button className="btn btn-primary" onClick={() => dt.current.exportCSV()}>Export CSV<FileDownloadIcon fontSize='small' /></button>
+      <div className="w-25 d-flex align-items-center justify-content-center">
+        <div>
+          <TextField
+            className='p-1 m-0'
+            value={globalFilterValue}
+            onChange={onGlobalFilterChange}
+            label="Keyword Search"
+            InputProps={{ startAdornment: (<InputAdornment position="start"><SearchOutlinedIcon /></InputAdornment>), }}
+          />
+        </div>
+        <div>
+          <button className="btn btn-primary" onClick={() => dt.current.exportCSV()}><FileDownloadIcon fontSize='small' /></button>
+        </div>
       </div>
     </div>
   );
@@ -150,12 +177,12 @@ const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction 
         ref={dt}
         value={data}
         dataKey='_id'
-        size={"small"}
         header={SheetHeader}
+        size={"small"}
         paginator // layout
         paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
-        scrollable scrollHeight="400px" // scrolable
+        scrollable scrollHeight="350px" // scrolable
         rows={50} rowsPerPageOptions={[10, 25, 50, 100, 500]}
         removableSort // sort
         sortField='date'

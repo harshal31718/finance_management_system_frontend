@@ -144,7 +144,7 @@ const NewTransaction = ({ addUploadedData, addIncome, addExpense }) => {
                 </form>
             </Dialog>
             <Menu model={items} popup ref={menuRight} id="popup_menu_right" popupAlignment="right" />
-            <button className="btn btn-light" type="button" onClick={(event) => menuRight.current.toggle(event)}><AddIcon /></button>
+            <button className="btn btn-primary rounded-circle" type="button" onClick={(event) => menuRight.current.toggle(event)}><AddIcon fontSize='large' /></button>
         </div>
     )
 }

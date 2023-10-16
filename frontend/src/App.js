@@ -105,6 +105,7 @@ const App = () => {
     data.map(obj => {
       if (obj.credit === null) setExpenses((prev) => [...prev, { date: obj.date, amount: obj.debit, category: "others", subCategory: "others", description: obj.details, }]);
       else setIncomes((prev) => [...prev, { date: obj.date, amount: obj.credit, category: "others", subCategory: "others", description: obj.details, }]);
+      return 0;
     });
     Axios.post("http://localhost:4000/addUploadedData", { data, email: profile.email });
   }

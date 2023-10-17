@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import CategoryCard from '../components/CategoryCard/CategoryCard'
 
-const Categories = () => {
+const Categories = ({ incomeCategories, expenseCategories, addCategory, addSubCategory }) => {
     const [bar, setBar] = useState(false);
 
     return (
@@ -11,10 +11,10 @@ const Categories = () => {
                 <button type="button" class={"btn" + (bar ? " btn-primary" : " btn-outline-primary")} onClick={() => setBar(!bar)} >Expense Categories</button>
             </div>
             <div style={{ display: bar ? 'none' : '' }}>
-                <CategoryCard type="income" />
+                <CategoryCard type="income" categories={incomeCategories} addCategory={addCategory} addSubCategory={addSubCategory} />
             </div>
             <div style={{ display: !bar ? 'none' : '' }}>
-                <CategoryCard type="expense" />
+                <CategoryCard type="expense" categories={expenseCategories} addCategory={addCategory} addSubCategory={addSubCategory} />
             </div>
         </div>
     )

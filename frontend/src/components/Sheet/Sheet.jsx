@@ -5,7 +5,6 @@ import { FilterMatchMode } from 'primereact/api';
 import TextField from '@mui/material/TextField';
 
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Dialog } from "primereact/dialog";
@@ -39,6 +38,11 @@ const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction 
       };
     });
   }
+  const addRow = (event) => {
+    addTransaction(newEntry);
+    setNewEntry({ date: "", amount: "", category: "", subCategory: "", description: "" });
+    event.preventDefault();
+  }
   const handleEdit = (event) => {
     const { name, value } = event.target;
     setSelectRowValue((prevValues) => {
@@ -47,12 +51,6 @@ const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction 
         [name]: value
       };
     });
-  }
-
-  const addRow = (event) => {
-    addTransaction(newEntry);
-    setNewEntry({ date: "", amount: "", category: "", subCategory: "", description: "" });
-    event.preventDefault();
   }
   const editRow = (event) => {
     editTransaction(selectRowValue);

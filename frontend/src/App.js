@@ -22,6 +22,17 @@ const App = () => {
   const [expenses, setExpenses] = useState([{}]);
   const [assets, setAssets] = useState([{}]);
   const [liabilities, setLiabilities] = useState([{}]);
+  const [incomeCategories, setIncomeCategories] = useState([
+    { category: "job", subCategories: ["TCS"] },
+    { category: "stock", subCategories: ["axisBank", "tatamotors"] },
+    { category: "realestate", subCategories: ["bunglow", "2bhk", "3,bhk"] }
+  ]);
+  const [expenseCategories, setExpenseCategories] = useState([
+    { category: "Home", subCategories: ["mother", "brother"] },
+    { category: "Living", subCategories: ["rent", "food"] },
+    { category: "travel", subCategories: ["daily", "homeTravel"] },
+    { category: "internet", subCategories: ["recharge", "wifirecharge"] }
+  ]);
 
   const logIn = useGoogleLogin({
     onSuccess: (codeResponse) => setUser(codeResponse),
@@ -60,6 +71,15 @@ const App = () => {
     setLiabilities([{}]);
   }
 
+  const addUploadedData = (uploadData) => {
+    const data = JSON.parse(uploadData);
+    data.map(obj => {
+      if (obj.credit === null) setExpenses((prev) => [...prev, { date: obj.date, amount: obj.debit, category: "others", subCategory: "others", description: obj.details, }]);
+      else setIncomes((prev) => [...prev, { date: obj.date, amount: obj.credit, category: "others", subCategory: "others", description: obj.details, }]);
+      return 0;
+    });
+    Axios.post("http://localhost:4000/addUploadedData", { data, email: profile.email });
+  }
   const addIncome = (data) => {
     setIncomes((prev) => [...prev, data]);
     Axios.post("http://localhost:4000/addData", { property: "income", data, email: profile.email });
@@ -100,16 +120,30 @@ const App = () => {
     setLiabilities((prev) => [...prev, data]);
     Axios.post("http://localhost:4000/addData", { property: "liability", data, email: profile.email });
   }
-
-  const addUploadedData = (uploadData) => {
-    const data = JSON.parse(uploadData);
-    data.map(obj => {
-      if (obj.credit === null) setExpenses((prev) => [...prev, { date: obj.date, amount: obj.debit, category: "others", subCategory: "others", description: obj.details, }]);
-      else setIncomes((prev) => [...prev, { date: obj.date, amount: obj.credit, category: "others", subCategory: "others", description: obj.details, }]);
-      return 0;
-    });
-    Axios.post("http://localhost:4000/addUploadedData", { data, email: profile.email });
+  const addCategory = (newCategory, type) => {
+    if (type === "income") setIncomeCategories((prev) => [...prev, newCategory])
+    else if (type === "expense") setExpenseCategories((prev) => [...prev, newCategory])
   }
+  const addSubCategory = (newSubCategory, type) => {
+    if (type === "income")
+      setIncomeCategories((prev) => {
+        prev.map((element) => {
+          if (element.category === newSubCategory.category) element.subCategories.push(newSubCategory.subCategory);
+          return 0;
+        })
+        return prev;
+      })
+    else if (type === "expense")
+      setExpenseCategories((prev) => {
+        prev.map((element) => {
+          if (element.category === newSubCategory.category) element.subCategories.push(newSubCategory.subCategory);
+          return 0;
+        })
+        return prev;
+      })
+  }
+
+
   return (
     <BrowserRouter>
       <div className='login'>
@@ -123,7 +157,7 @@ const App = () => {
                 <Route path='/expense' element={<Expense expenseData={expenses} addExpense={addExpense} editExpense={editExpense} deleteExpense={deleteExpense} />} />
                 <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />
                 <Route path='/liabilities' element={<Liabilities liabilitiesData={liabilities} addLiability={addLiability} />} />
-                <Route path='/categories' element={<Categories />} />
+                <Route path='/categories' element={<Categories incomeCategories={incomeCategories} expenseCategories={expenseCategories} addCategory={addCategory} addSubCategory={addSubCategory} />} />
               </Routes>
             </div>
             <NewTransaction addUploadedData={addUploadedData} addIncome={addIncome} addExpense={addExpense} />

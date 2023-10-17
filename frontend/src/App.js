@@ -22,17 +22,8 @@ const App = () => {
   const [expenses, setExpenses] = useState([{}]);
   const [assets, setAssets] = useState([{}]);
   const [liabilities, setLiabilities] = useState([{}]);
-  const [incomeCategories, setIncomeCategories] = useState([
-    { category: "job", subCategories: ["TCS"] },
-    { category: "stock", subCategories: ["axisBank", "tatamotors"] },
-    { category: "realestate", subCategories: ["bunglow", "2bhk", "3,bhk"] }
-  ]);
-  const [expenseCategories, setExpenseCategories] = useState([
-    { category: "Home", subCategories: ["mother", "brother"] },
-    { category: "Living", subCategories: ["rent", "food"] },
-    { category: "travel", subCategories: ["daily", "homeTravel"] },
-    { category: "internet", subCategories: ["recharge", "wifirecharge"] }
-  ]);
+  const [incomeCategories, setIncomeCategories] = useState([{}]);
+  const [expenseCategories, setExpenseCategories] = useState([{}]);
 
   const logIn = useGoogleLogin({
     onSuccess: (codeResponse) => setUser(codeResponse),
@@ -54,6 +45,8 @@ const App = () => {
           setExpenses(userData[0].expenses);
           setAssets(userData[0].assets);
           setLiabilities(userData[0].liabilities);
+          setIncomeCategories(userData[0].incomeCategories);
+          setExpenseCategories(userData[0].expenseCategories);
           setProfile(profile);
         })
         .catch((error) => { error = new Error(); });
@@ -78,7 +71,7 @@ const App = () => {
       else setIncomes((prev) => [...prev, { date: obj.date, amount: obj.credit, category: "others", subCategory: "others", description: obj.details, }]);
       return 0;
     });
-    Axios.post("http://localhost:4000/addUploadedData", { data, email: profile.email });
+    Axios.post("http://localhost:4000/addUploadedTransactions", { data, email: profile.email });
   }
   const addIncome = (data) => {
     setIncomes((prev) => [...prev, data]);
@@ -121,11 +114,17 @@ const App = () => {
     Axios.post("http://localhost:4000/addData", { property: "liability", data, email: profile.email });
   }
   const addCategory = (newCategory, type) => {
-    if (type === "income") setIncomeCategories((prev) => [...prev, newCategory])
-    else if (type === "expense") setExpenseCategories((prev) => [...prev, newCategory])
+    if (type === "income") {
+      setIncomeCategories((prev) => [...prev, newCategory])
+      Axios.post("http://localhost:4000/addData", { property: "incomeCategories", data: newCategory, email: profile.email });
+    }
+    else if (type === "expense") {
+      setExpenseCategories((prev) => [...prev, newCategory])
+      Axios.post("http://localhost:4000/addData", { property: "expenseCategories", data: newCategory, email: profile.email });
+    }
   }
   const addSubCategory = (newSubCategory, type) => {
-    if (type === "income")
+    if (type === "income") {
       setIncomeCategories((prev) => {
         prev.map((element) => {
           if (element.category === newSubCategory.category) element.subCategories.push(newSubCategory.subCategory);
@@ -133,7 +132,9 @@ const App = () => {
         })
         return prev;
       })
-    else if (type === "expense")
+      Axios.post("http://localhost:4000/addData", { property: "incomeSubCategories", data: newSubCategory, email: profile.email });
+    }
+    else if (type === "expense") {
       setExpenseCategories((prev) => {
         prev.map((element) => {
           if (element.category === newSubCategory.category) element.subCategories.push(newSubCategory.subCategory);
@@ -141,6 +142,8 @@ const App = () => {
         })
         return prev;
       })
+      Axios.post("http://localhost:4000/addData", { property: "expenseSubCategories", data: newSubCategory, email: profile.email });
+    }
   }
 
 

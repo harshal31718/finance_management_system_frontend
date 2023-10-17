@@ -56,8 +56,65 @@ const dataSchema = new mongoose.Schema({
     monthlyIncome: Number,
     note: String,
   }],
+  incomeCategories: [{
+    category: String,
+    subCategories: [String],
+  }],
+  expenseCategories: [{
+    category: String,
+    subCategories: [String]
+  }]
 });
 const Data = mongoose.model("Data", dataSchema);
+
+const defaultData = {
+  name: "Demo Data",
+  username: "DD",
+  email: "dd@gmail.com",
+  incomes: [{
+    date: "2023-10-12",
+    amount: 25000,
+    category: "job",
+    subCategory: "TCS",
+    description: "Suspendisse ornare consequat lectus. In est risus",
+  }],
+  expenses: [{
+    date: "2023-10-12",
+    amount: 1000,
+    category: "online Shoping",
+    subCategory: "amzon",
+    description: "boat rockerz 255 pro"
+  }],
+  assets: [{
+    date: "2023-10-12",
+    name: "2-bhk,Godda",
+    initialAmount: "2500000",
+    details: "given for rental",
+    monthlyMaintainance: "1000",
+    monthlyIncome: "13000",
+    note: "profitable",
+  }],
+  liabilities: [{
+    date: "2023-10-12",
+    name: "TVS Raider",
+    initialAmount: "137000",
+    details: "two wheeler bought in july",
+    monthlyMaintainance: "1000",
+    monthlyIncome: "0",
+    note: "bike for daily use",
+  }],
+  incomeCategories: [
+    { category: "job", subCategories: ["TCS"] },
+    { category: "stock", subCategories: ["axisBank", "tatamotors"] },
+    { category: "realestate", subCategories: ["bunglow", "2bhk", "3,bhk"] }
+  ],
+  expenseCategories: [
+    { category: "Home", subCategories: ["mother", "brother"] },
+    { category: "Living", subCategories: ["rent", "food"] },
+    { category: "travel", subCategories: ["daily", "homeTravel"] },
+    { category: "internet", subCategories: ["recharge", "wifirecharge"] }
+  ]
+}
 
 let prevUser = null;
 app.get("/user", (req, res) => {
@@ -86,10 +143,12 @@ app.get("/login", async (req, res) => {
           Data.create({
             name: profile.name,
             email: profile.email,
-            incomes: [],
-            expenses: [],
-            assets: [],
-            liabilities: [],
+            incomes: defaultData.incomes,
+            expenses: defaultData.expenses,
+            assets: defaultData.assets,
+            liabilities: defaultData.liabilities,
+            incomeCategories: defaultData.incomeCategories,
+            expenseCategories: defaultData.expenseCategories
           });
           Data.find({ email: profile.email }).exec().then((userData) => res.send({ userData, profile }));
         } else {
@@ -105,7 +164,7 @@ app.post("/logout", async (req, res) => {
   prevUser = null;
 })
 
-app.post("/addUploadedData", async (req, res) => {
+app.post("/addUploadedTransactions", async (req, res) => {
   const newData = req.body.data;
   const email = req.body.email;
 
@@ -159,6 +218,34 @@ app.post("/addData", async (req, res) => {
       result[0].liabilities.push(newdata);
       result[0].save();
     });
+  } else if (property === "incomeCategories") {
+    await Data.find({ email: email }).exec().then((result) => {
+      result[0].incomeCategories.push(newdata);
+      result[0].save();
+    })
+  } else if (property === "expenseCategories") {
+    await Data.find({ email: email }).exec().then((result) => {
+      result[0].expenseCategories.push(newdata);
+      result[0].save();
+    })
+  } else if (property === "incomeSubCategories") {
+    await Data.find({ email: email }).exec().then((result) => {
+      result[0].incomeCategories.map((element) => {
+        if (element.category === newdata.category)
+          element.subCategories.push(newdata.subCategory);
+        return 0;
+      })
+      result[0].save();
+    })
+  } else if (property === "expenseSubCategories") {
+    await Data.find({ email: email }).exec().then((result) => {
+      result[0].expenseCategories.map((element) => {
+        if (element.category === newdata.category)
+          element.subCategories.push(newdata.subCategory);
+        return 0;
+      })
+      result[0].save();
+    })
   }
 });
 

@@ -1,4 +1,3 @@
-// https://primereact.org/
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
@@ -29,7 +28,6 @@ const App = () => {
     onSuccess: (codeResponse) => setUser(codeResponse),
     onError: (error) => console.log('Login Failed:', error)
   });
-
   useEffect(() => {
     if (!user) {
       Axios.get("http://localhost:4000/user").then((result) => {
@@ -52,7 +50,6 @@ const App = () => {
         .catch((error) => { error = new Error(); });
     }
   }, [user]);
-
   const logOut = () => {
     googleLogout();
     Axios.post("http://localhost:4000/logout");
@@ -63,7 +60,6 @@ const App = () => {
     setAssets([{}]);
     setLiabilities([{}]);
   }
-
   const addUploadedData = (uploadData) => {
     const data = JSON.parse(uploadData);
     data.map(obj => {
@@ -78,9 +74,8 @@ const App = () => {
     Axios.post("http://localhost:4000/addData", { property: "income", data, email: profile.email });
   }
   const editIncome = (data) => {
-    const id = data._id;
     setIncomes((prev) => {
-      prev = prev.filter((element) => element._id !== id);
+      prev = prev.filter((element) => element._id !== data._id);
       return [...prev, data]
     })
     Axios.post("http://localhost:4000/editData", { property: "income", data, email: profile.email });
@@ -94,9 +89,8 @@ const App = () => {
     Axios.post("http://localhost:4000/addData", { property: "expense", data, email: profile.email });
   }
   const editExpense = (data) => {
-    const id = data._id;
     setExpenses((prev) => {
-      prev = prev.filter((element) => element._id !== id);
+      prev = prev.filter((element) => element._id !== data._id);
       return [...prev, data]
     })
     Axios.post("http://localhost:4000/editData", { property: "expense", data, email: profile.email });
@@ -146,13 +140,12 @@ const App = () => {
     }
   }
 
-
   return (
     <BrowserRouter>
       <div className='login'>
         {(user && profile) ? (
           <>
-            <Header logOut={logOut} />
+            <Header profile={profile} logOut={logOut} />
             <div className='px-3' style={{ marginTop: "56px" }}>
               <Routes>
                 <Route path='/' element={<Home profile={profile} incomes={incomes} expenses={expenses} assets={assets} liabilities={liabilities} />} />

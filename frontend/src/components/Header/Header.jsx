@@ -4,7 +4,7 @@ import { Avatar } from 'primereact/avatar';
 import { OverlayPanel } from "primereact/overlaypanel";
 
 
-const Header = ({ logOut }) => {
+const Header = ({ profile, logOut }) => {
     const profileOP = useRef(null);
     return (
         <div className="header container fixed-top bg-white" style={{ maxWidth: "100%" }}>
@@ -40,11 +40,12 @@ const Header = ({ logOut }) => {
                 <div className="col-2 d-flex justify-content-end align-items-top">
                     <Avatar icon="pi pi-user" shape="circle" onClick={(e) => profileOP.current.toggle(e)} style={{ backgroundColor: '#222222', color: '#ffffff', width: '40px', height: "40px" }} />
                     <OverlayPanel ref={profileOP}>
-                        <div>
-                            <div>
-                                <h6>Hello! Harshal Dodke</h6>
+                        <div className="">
+                            <div className="">
+                                <h6 className="m-0 p-0">Hello! {profile.name}</h6>
+                                <span>{profile.email}</span>
                             </div>
-                            <div>
+                            <div className="m-0 mt-2 p-0">
                                 <button className="btn btn-outline-danger" type="button" onClick={logOut} size="small" >Log Out</button>
                             </div>
                         </div>

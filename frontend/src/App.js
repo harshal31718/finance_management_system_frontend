@@ -156,14 +156,14 @@ const App = () => {
             <div className='px-3' style={{ marginTop: "56px" }}>
               <Routes>
                 <Route path='/' element={<Home profile={profile} incomes={incomes} expenses={expenses} assets={assets} liabilities={liabilities} />} />
-                <Route path='/income' element={<Income incomeData={incomes} addIncome={addIncome} editIncome={editIncome} deleteIncome={deleteIncome} />} />
-                <Route path='/expense' element={<Expense expenseData={expenses} addExpense={addExpense} editExpense={editExpense} deleteExpense={deleteExpense} />} />
+                <Route path='/income' element={<Income incomeData={incomes} incomeCategories={incomeCategories} addIncome={addIncome} editIncome={editIncome} deleteIncome={deleteIncome} />} />
+                <Route path='/expense' element={<Expense expenseData={expenses} expenseCategories={expenseCategories} addExpense={addExpense} editExpense={editExpense} deleteExpense={deleteExpense} />} />
                 <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />
                 <Route path='/liabilities' element={<Liabilities liabilitiesData={liabilities} addLiability={addLiability} />} />
                 <Route path='/categories' element={<Categories incomeCategories={incomeCategories} expenseCategories={expenseCategories} addCategory={addCategory} addSubCategory={addSubCategory} />} />
               </Routes>
             </div>
-            <NewTransaction addUploadedData={addUploadedData} addIncome={addIncome} addExpense={addExpense} />
+            <NewTransaction incomeCategories={incomeCategories} expenseCategories={expenseCategories} addUploadedData={addUploadedData} addIncome={addIncome} addExpense={addExpense} />
           </>
         ) : (<Login logIn={logIn} />)}
       </div>

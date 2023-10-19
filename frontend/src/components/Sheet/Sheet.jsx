@@ -1,79 +1,56 @@
 import React, { useState, useRef } from 'react'
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { Toast } from "primereact/toast";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { FilterMatchMode } from 'primereact/api';
-import TextField from '@mui/material/TextField';
-
-import Button from '@mui/material/Button';
-
-import { ConfirmDialog } from "primereact/confirmdialog";
 import { Dialog } from "primereact/dialog";
-import { Toast } from "primereact/toast";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
-import InputAdornment from '@mui/material/InputAdornment';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import EditIcon from '@mui/icons-material/Edit';
-
-const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction }) => {
+const Sheet = ({ type, data, categories, addTransaction, editTransaction, deleteTransaction }) => {
   const toast = useRef(null);
   const dt = useRef(null);
 
-  const [newEntry, setNewEntry] = useState({ date: "", amount: "", category: "", subCategory: "", note: "" });
-
+  const [newEntry, setNewEntry] = useState({ date: "", amount: "", category: "", subCategory: "", description: "" });
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [filters, setFilters] = useState({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
-
-  const [selectRowValue, setSelectRowValue] = useState({ date: "", amount: "", category: "", subCategory: "", note: "" });
+  const [selectRowValue, setSelectRowValue] = useState({ date: "", amount: "", category: "", subCategory: "", description: "" });
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
 
-  const handleAdd = (event) => {
-    const { name, value } = event.target;
-    setNewEntry((prevValues) => {
-      return {
-        ...prevValues,
-        [name]: value
-      };
-    });
-  }
+  const handleAdd = (event) => setNewEntry((prevValues) => { return { ...prevValues, [event.target.name]: event.target.value }; });
   const addRow = (event) => {
     addTransaction(newEntry);
+    toast.current.show({ severity: "success", summary: "New " + type.toUpperCase() + " Added", life: 3000 });
     setNewEntry({ date: "", amount: "", category: "", subCategory: "", description: "" });
     event.preventDefault();
   }
-  const handleEdit = (event) => {
-    const { name, value } = event.target;
-    setSelectRowValue((prevValues) => {
-      return {
-        ...prevValues,
-        [name]: value
-      };
-    });
-  }
+  const handleEdit = (event) => setSelectRowValue((prevValues) => { return { ...prevValues, [event.target.name]: event.target.value }; });
   const editRow = (event) => {
     editTransaction(selectRowValue);
     setEditDialog(false);
-    toast.current.show({
-      severity: "success",
-      summary: "Successfully Edited",
-      life: 3000
-    });
+    toast.current.show({ severity: "success", summary: "Successfully Edited", life: 3000 });
     setSelectRowValue({ date: "", amount: "", category: "", subCategory: "", description: "" });
     event.preventDefault();
   }
   const deleteRow = () => {
     const id = selectRowValue._id;
     deleteTransaction(id);
-    toast.current.show({
-      severity: "error",
-      summary: "Successfully Deleted",
-      life: 3000
-    });
-    setSelectRowValue({ date: "", amount: "", category: "", subCategory: "", note: "" });
+    toast.current.show({ severity: "error", summary: "Successfully Deleted", life: 3000 });
+    setSelectRowValue({ date: "", amount: "", category: "", subCategory: "", description: "" });
   }
-
   const onGlobalFilterChange = (e) => {
     const value = e.target.value;
     let _filters = { ...filters };
@@ -81,8 +58,6 @@ const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction 
     setFilters(_filters);
     setGlobalFilterValue(value);
   }
-
-
   const SheetHeader = (
     <div className='d-flex align-items-center justify-content-between '>
       <div className="card w-75 p-1 m-0">
@@ -90,21 +65,49 @@ const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction 
           <div className='container p-0 m-0'>
             <div className='row p-0 m-0'>
               <div className="col p-1 m-0">
-                <input className='m-0 px-2 h-100 w-100 border border-dark rounded bg-transparent' type='date' id='date' name='date' value={newEntry.date} placeholder="Date" onChange={handleAdd} required />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Date"
+                    views={['year', 'month', 'day']}
+                    format="D/M/YYYY"
+                    onChange={(e) => {
+                      handleAdd({ target: { name: "date", value: e.$D + "-" + (e.$M + 1) + "-" + e.$y } })
+                    }}
+                    autoOk={true}
+                    sx={{ width: "100%" }}
+                    slotProps={{ textField: { size: 'small' }, field: { shouldRespectLeadingZeros: true } }}
+                  />
+                </LocalizationProvider>
               </div>
               <div className="col p-1 m-0">
                 <TextField className='m-0 p-0 h-100 w-100' type="number" id="amount" name='amount' value={newEntry.amount} label="Amount" onChange={handleAdd} size="small" required />
               </div>
               <div className="col p-1 m-0">
-                <TextField className='m-0 p-0 h-100 w-100' id="category" name='category' value={newEntry.category} label="Category" onChange={handleAdd} size="small" required />
+                <FormControl sx={{ width: '100%' }} size='small'>
+                  <InputLabel id="Categorylabel">Category</InputLabel>
+                  <Select labelId="Categorylabel" id="category" name="category" value={newEntry.category} label="Category" onChange={handleAdd} required >
+                    {categories.map(element =>
+                      <MenuItem value={element.category}>
+                        {element.category}
+                      </MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
               </div>
             </div>
             <div className='row p-0 m-0'>
               <div className="col-5 p-1 m-0">
-                <TextField className='m-0 p-0 h-100 w-100 ' id="subCategory" name="subCategory" value={newEntry.subCategory} label={(type === "income") ? "Source" : "Vendor"} onChange={handleAdd} size="small" required />
+                <FormControl sx={{ width: '100%' }} size='small'>
+                  <InputLabel id="subCategorylabel">{(type === "income") ? "Source" : "Vendor"}</InputLabel>
+                  <Select labelId="subCategorylabel" id="subCategory" name="subCategory" value={newEntry.subCategory} label={(type === "income") ? "Source" : "Vendor"} onChange={handleAdd} required >
+                    {(newEntry.category === "") ? (<MenuItem value="other">Other(Select Category)</MenuItem>)
+                      : (categories.filter(element => element.category === newEntry.category)[0].subCategories.map(element => <MenuItem value={element}>{element}</MenuItem>))
+                    }
+                  </Select>
+                </FormControl>
               </div>
               <div className="col-5 p-1 m-0">
-                <TextField className='m-0 p-0 h-100 w-100' id="description" name='description' value={newEntry.description} label="Discription" onChange={handleAdd} size="small" />
+                <TextField className='m-0 p-0 h-100 w-100' id="description" name='description' value={newEntry.description} label="Description" onChange={handleAdd} size="small" />
               </div>
               <div className="col p-1 m-0 d-flex justify-content-center">
                 <button className='btn btn-primary h-100 w-100' type='submit' variant="contained">NEW {type.toUpperCase()}</button>
@@ -115,12 +118,11 @@ const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction 
       </div>
       <div className="w-25 d-flex align-items-center justify-content-center">
         <div>
-          <TextField
-            className='p-1 m-0'
+          <TextField className='p-1 m-0'
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
-            label="Keyword Search"
             InputProps={{ startAdornment: (<InputAdornment position="start"><SearchOutlinedIcon /></InputAdornment>), }}
+            label="Keyword Search"
           />
         </div>
         <div>
@@ -129,15 +131,11 @@ const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction 
       </div>
     </div>
   );
-
-  const ActionTemplate = (rowValue) => {
-    return (
-      <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-outline-primary rounded-circle m-1" onClick={() => { setSelectRowValue(rowValue); setEditDialog(true); }}><EditIcon fontSize="small" /></button>
-        <button type="button" class="btn btn-outline-danger rounded-circle m-1" onClick={() => { setSelectRowValue(rowValue); setDeleteDialog(true) }}><DeleteForeverIcon fontSize='small' /></button>
-      </div>
-    );
-  }
+  const ActionTemplate = (rowValue) =>
+    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+      <button type="button" class="btn btn-outline-primary rounded-circle m-1" onClick={() => { setSelectRowValue(rowValue); setEditDialog(true); }}><EditIcon fontSize="small" /></button>
+      <button type="button" class="btn btn-outline-danger rounded-circle m-1" onClick={() => { setSelectRowValue(rowValue); setDeleteDialog(true) }}><DeleteForeverIcon fontSize='small' /></button>
+    </div>
 
   return (
     <div className='card mx-2'>
@@ -164,7 +162,7 @@ const Sheet = ({ type, data, addTransaction, editTransaction, deleteTransaction 
                 <TextField className='m-0 p-0 h-100 w-100' id="description" name='description' value={selectRowValue.description} label="Discription" onChange={handleEdit} size="small" />
               </div>
               <div className="col p-1 m-0 d-flex justify-content-center">
-                <Button className='m-0 p-0 h-100 w-100' type='submit' variant="contained">UPDATE</Button>
+                <button className='btn btn-primary h-100 w-100' type='submit' variant="contained">UPDATE</button>
               </div>
             </div>
           </div>

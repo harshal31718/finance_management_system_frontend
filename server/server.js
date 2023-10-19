@@ -72,21 +72,21 @@ const defaultData = {
   username: "DD",
   email: "dd@gmail.com",
   incomes: [{
-    date: "2023-10-12",
+    date: "12-10-2023",
     amount: 25000,
     category: "job",
     subCategory: "TCS",
     description: "Suspendisse ornare consequat lectus. In est risus",
   }],
   expenses: [{
-    date: "2023-10-12",
+    date: "12-10-2023",
     amount: 1000,
     category: "online Shoping",
     subCategory: "amzon",
     description: "boat rockerz 255 pro"
   }],
   assets: [{
-    date: "2023-10-12",
+    date: "12-10-2023",
     name: "2-bhk,Godda",
     initialAmount: "2500000",
     details: "given for rental",
@@ -95,7 +95,7 @@ const defaultData = {
     note: "profitable",
   }],
   liabilities: [{
-    date: "2023-10-12",
+    date: "12-10-2023",
     name: "TVS Raider",
     initialAmount: "137000",
     details: "two wheeler bought in july",
@@ -104,15 +104,14 @@ const defaultData = {
     note: "bike for daily use",
   }],
   incomeCategories: [
-    { category: "job", subCategories: ["TCS"] },
-    { category: "stock", subCategories: ["axisBank", "tatamotors"] },
+    { category: "job", subCategories: ["TCS", "google"] },
+    { category: "stock", subCategories: ["axisBank", "tataMotors", "hdfc"] },
     { category: "realestate", subCategories: ["bunglow", "2bhk", "3,bhk"] }
   ],
   expenseCategories: [
     { category: "Home", subCategories: ["mother", "brother"] },
     { category: "Living", subCategories: ["rent", "food"] },
     { category: "travel", subCategories: ["daily", "homeTravel"] },
-    { category: "internet", subCategories: ["recharge", "wifirecharge"] }
   ]
 }
 

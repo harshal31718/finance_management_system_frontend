@@ -176,10 +176,10 @@ app.post("/addUploadedTransactions", async (req, res) => {
       result[0].transactions.push({
         transactionType: obj.transactionType,
         date: obj.date,
-        amount: obj.debit,
-        category: "others",
-        subCategory: "others",
-        description: obj.details,
+        amount: obj.amount,
+        category: obj.category,
+        subCategory: obj.subCategory,
+        description: obj.description,
       });
     });
     result[0].save();

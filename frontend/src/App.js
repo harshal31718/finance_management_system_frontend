@@ -66,9 +66,9 @@ const App = () => {
     setAssets([{}]);
     setLiabilities([{}]);
   }
-  const addUploadedData = (uploadData) => {
+  const addUploadedTransactions = (uploadData) => {
     const data = JSON.parse(uploadData);
-    setTransactions((prev) => [...prev, data]);
+    setTransactions((prev) => [...prev, ...data]);
     Axios.post("http://localhost:4000/addUploadedTransactions", { data, email: profile.email });
   }
   const addTransaction = (data) => {
@@ -137,7 +137,7 @@ const App = () => {
                 <ViewListIcon fontSize='large' onClick={() => setSideBarToggle(!sideBarToggle)} />
                 <NavLink className="navbar-brand" to="/">FMS</NavLink>
               </div>
-              <div className="d-flex align-items-top">
+              <div className="d-flex align-items-center">
                 <Avatar icon="pi pi-user" shape="circle" onClick={(e) => profileOP.current.toggle(e)} style={{ backgroundColor: '#222222', color: '#ffffff', width: '40px', height: "40px" }} />
                 <OverlayPanel ref={profileOP}>
                   <div className="">
@@ -155,38 +155,18 @@ const App = () => {
             <div className='d-flex' style={{ paddingTop: "56px", height: "100vh" }}>
               <div className="border border-top-0 border-black m-0 px-2">
                 <ul className="navbar-nav mr-auto" style={{ display: sideBarToggle ? '' : 'none' }}>
-                  <li className="nav-item active">
-                    <NavLink className="nav-link d-flex align-items-center" to="/"><HomeIcon fontSize="large" /></NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/transactions"><AddShoppingCartIcon fontSize="large" /></NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/assets"><BusinessIcon fontSize="large" /></NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/liabilities"><DirectionsCarIcon fontSize="large" /></NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/categories"><CategoryIcon fontSize="large" /></NavLink>
-                  </li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/"><HomeIcon fontSize="large" /></NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/transactions"><AddShoppingCartIcon fontSize="large" /></NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/assets"><BusinessIcon fontSize="large" /></NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/liabilities"><DirectionsCarIcon fontSize="large" /></NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/categories"><CategoryIcon fontSize="large" /></NavLink></li>
                 </ul>
                 <ul className="navbar-nav mr-auto" style={{ display: !sideBarToggle ? '' : 'none' }}>
-                  <li className="nav-item active">
-                    <NavLink className="nav-link d-flex align-items-center" to="/"><HomeIcon fontSize="large" />Home</NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/transactions"><AddShoppingCartIcon fontSize="large" />Transactions</NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/assets"><BusinessIcon fontSize="large" />Assets</NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/liabilities"><DirectionsCarIcon fontSize="large" />Liabilities</NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/categories"><CategoryIcon fontSize="large" />Categories</NavLink>
-                  </li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/"><HomeIcon fontSize="large" />Home</NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/transactions"><AddShoppingCartIcon fontSize="large" />Transactions</NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/assets"><BusinessIcon fontSize="large" />Assets</NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/liabilities"><DirectionsCarIcon fontSize="large" />Liabilities</NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center" to="/categories"><CategoryIcon fontSize="large" />Categories</NavLink></li>
                 </ul>
               </div>
               <div className='flex-grow-1 overflow-auto m-0 p-1' styl>
@@ -199,7 +179,7 @@ const App = () => {
                 </Routes>
               </div>
             </div>
-            <NewTransaction incomeCategories={incomeCategories} expenseCategories={expenseCategories} addUploadedData={addUploadedData} addTransaction={addTransaction} />
+            <NewTransaction incomeCategories={incomeCategories} expenseCategories={expenseCategories} addUploadedTransactions={addUploadedTransactions} addTransaction={addTransaction} />
           </div>
         ) : (<Login logIn={logIn} />)}
       </div>

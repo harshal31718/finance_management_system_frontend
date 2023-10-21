@@ -2,21 +2,13 @@ import React, { useState, useRef } from 'react'
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
+import { TextField, FormControl, InputLabel, Select, MenuItem, Dialog, DialogContent, DialogTitle, DialogActions } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
 import { Toast } from "primereact/toast";
 import { OverlayPanel } from 'primereact/overlaypanel';
 
-const NewTransaction = ({ incomeCategories, expenseCategories, addUploadedData, addTransaction }) => {
+const NewTransaction = ({ incomeCategories, expenseCategories, addUploadedTransactions, addTransaction }) => {
     const toast = useRef(null);
     const op = useRef(null);
     const [newTransactionEntry, setNewTransactionEntry] = useState({ transactionType: "", date: "", amount: "", category: "", subCategory: "", description: "" });
@@ -29,7 +21,7 @@ const NewTransaction = ({ incomeCategories, expenseCategories, addUploadedData, 
     return (
         <div className="position-fixed bottom-0 end-0 m-3" style={{ position: "fixed" }}>
             <Toast ref={toast} position='bottom-right' />
-            {/* <Dialog open={uploadDialog}>
+            <Dialog open={uploadDialog}>
                 <DialogTitle>Upload JSON</DialogTitle>
                 <DialogContent sx={{ m: 0, pb: 0 }}>
                     <div className='container'>
@@ -39,32 +31,22 @@ const NewTransaction = ({ incomeCategories, expenseCategories, addUploadedData, 
                             onChange={(e) => {
                                 const fileReader = new FileReader();
                                 fileReader.readAsText(e.target.files[0], "UTF-8");
-                                fileReader.onload = (e) => {
-                                    const result = e.target.result;
-                                    addUploadedData(result);
-                                };
+                                fileReader.onload = (e) => addUploadedTransactions(e.target.result);
                                 setUploadDialog(false);
-                                toast.current.show({
-                                    severity: "success",
-                                    summary: "JSON Added",
-                                    life: 3000
-                                });
-                            }} />
+                                toast.current.show({ severity: "success", summary: "JSON Added", life: 3000 });
+                            }}
+                        />
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <button type="button" className="btn btn-outline-danger" onClick={() => { setUploadDialog(false); }}>Cancel</button>
+                    <button type="button" className="btn btn-outline-danger" onClick={() => setUploadDialog(false)}>Cancel</button>
                 </DialogActions>
-            </Dialog> */}
+            </Dialog>
             <Dialog open={incomeDialog}>
                 <DialogTitle>New Income</DialogTitle>
                 <DialogContent sx={{ m: 0, pb: 0 }}>
                     <form onSubmit={(event) => {
-                        toast.current.show({
-                            severity: "success",
-                            summary: "Income Added",
-                            life: 3000
-                        });
+                        toast.current.show({ severity: "success", summary: "Income Added", life: 3000 });
                         addTransaction({ ...newTransactionEntry, transactionType: "income" });
                         setIncomeDialog(false);
                         setNewTransactionEntry({ transactionType: "", date: "", amount: "", category: "", subCategory: "", description: "" });
@@ -134,11 +116,7 @@ const NewTransaction = ({ incomeCategories, expenseCategories, addUploadedData, 
                 <DialogTitle>New Expense</DialogTitle>
                 <DialogContent sx={{ m: 0, pb: 0 }}>
                     <form onSubmit={(event) => {
-                        toast.current.show({
-                            severity: "success",
-                            summary: "Expense Added",
-                            life: 3000
-                        });
+                        toast.current.show({ severity: "success", summary: "Expense Added", life: 3000 });
                         addTransaction({ ...newTransactionEntry, transactionType: "expense" });
                         setExpenseDialog(false);
                         setNewTransactionEntry({ date: "", amount: "", category: "", subCategory: "", description: "" });

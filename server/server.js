@@ -24,14 +24,8 @@ const dataSchema = new mongoose.Schema({
   name: String,
   username: String,
   email: String,
-  incomes: [{
-    date: String,
-    amount: Number,
-    category: String,
-    subCategory: String,
-    description: String,
-  }],
-  expenses: [{
+  transactions: [{
+    transactionType: String,
     date: String,
     amount: Number,
     category: String,
@@ -41,8 +35,8 @@ const dataSchema = new mongoose.Schema({
   assets: [{
     date: String,
     name: String,
+    description: String,
     initialAmount: Number,
-    details: String,
     monthlyMaintainance: Number,
     monthlyIncome: Number,
     note: String,
@@ -50,8 +44,8 @@ const dataSchema = new mongoose.Schema({
   liabilities: [{
     date: String,
     name: String,
+    description: String,
     initialAmount: Number,
-    details: String,
     monthlyMaintainance: Number,
     monthlyIncome: Number,
     note: String,
@@ -71,34 +65,46 @@ const defaultData = {
   name: "Demo Data",
   username: "DD",
   email: "dd@gmail.com",
-  incomes: [{
-    date: "12-10-2023",
-    amount: 25000,
-    category: "job",
-    subCategory: "TCS",
-    description: "Suspendisse ornare consequat lectus. In est risus",
-  }],
-  expenses: [{
-    date: "12-10-2023",
-    amount: 1000,
-    category: "online Shoping",
-    subCategory: "amzon",
-    description: "boat rockerz 255 pro"
-  }],
+  transactions: [
+    {
+      transactionType: "income",
+      date: "12-10-2023",
+      amount: 25000,
+      category: "job",
+      subCategory: "TCS",
+      description: "Suspendisse ornare consequat lectus. In est risus",
+    },
+    {
+      transactionType: "expense",
+      date: "12-10-2023",
+      amount: 1000,
+      category: "online Shoping",
+      subCategory: "amazon",
+      description: "boat rockerz 255 pro",
+    }
+  ],
   assets: [{
     date: "12-10-2023",
     name: "2-bhk,Godda",
     initialAmount: "2500000",
-    details: "given for rental",
+    decription: "given for rental",
     monthlyMaintainance: "1000",
     monthlyIncome: "13000",
+    note: "profitable",
+  }, {
+    date: "13-10-2023",
+    name: "1-bhk,Nagpur",
+    decription: "given for rental",
+    initialAmount: "1250000",
+    monthlyMaintainance: "500",
+    monthlyIncome: "10000",
     note: "profitable",
   }],
   liabilities: [{
     date: "12-10-2023",
     name: "TVS Raider",
+    description: "two wheeler bought in july",
     initialAmount: "137000",
-    details: "two wheeler bought in july",
     monthlyMaintainance: "1000",
     monthlyIncome: "0",
     note: "bike for daily use",
@@ -138,12 +144,11 @@ app.get("/login", async (req, res) => {
       }
       await Data.find({ email: profile.email }).exec().then((userData) => {
         if (userData.length == 0) {
-          console.log("creating user");
+          console.log("New User Created");
           Data.create({
             name: profile.name,
             email: profile.email,
-            incomes: defaultData.incomes,
-            expenses: defaultData.expenses,
+            transactions: defaultData.transactions,
             assets: defaultData.assets,
             liabilities: defaultData.liabilities,
             incomeCategories: defaultData.incomeCategories,
@@ -166,27 +171,16 @@ app.post("/logout", async (req, res) => {
 app.post("/addUploadedTransactions", async (req, res) => {
   const newData = req.body.data;
   const email = req.body.email;
-
   await Data.find({ email: email }).exec().then((result) => {
     newData.map(obj => {
-      if (obj.credit === null) {
-        result[0].expenses.push({
-          date: obj.date,
-          amount: obj.debit,
-          category: "others",
-          subCategory: "others",
-          description: obj.details,
-        });
-      }
-      else {
-        result[0].incomes.push({
-          date: obj.date,
-          amount: obj.credit,
-          category: "others",
-          subCategory: "others",
-          description: obj.details,
-        });
-      }
+      result[0].transactions.push({
+        transactionType: obj.transactionType,
+        date: obj.date,
+        amount: obj.debit,
+        category: "others",
+        subCategory: "others",
+        description: obj.details,
+      });
     });
     result[0].save();
   });
@@ -196,15 +190,9 @@ app.post("/addData", async (req, res) => {
   const property = req.body.property;
   const newdata = req.body.data;
   const email = req.body.email;
-
-  if (property === "income") {
+  if (property === "transaction") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].incomes.push(newdata);
-      result[0].save();
-    });
-  } else if (property === "expense") {
-    await Data.find({ email: email }).exec().then((result) => {
-      result[0].expenses.push(newdata);
+      result[0].transactions.push(newdata);
       result[0].save();
     });
   } else if (property === "asset") {
@@ -248,40 +236,27 @@ app.post("/addData", async (req, res) => {
   }
 });
 
-
 app.post("/editData", async (req, res) => {
   const property = req.body.property;
   const data = req.body.data;
   const email = req.body.email;
   const id = data._id;
-  if (property === "income") {
+  if (property === "transaction") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].incomes = result[0].incomes.filter((element) => element._id.toString() !== id);
-      result[0].incomes.push(data);
-      result[0].save();
-    });
-  }
-  if (property === "expense") {
-    await Data.find({ email: email }).exec().then((result) => {
-      result[0].expenses = result[0].expenses.filter((element) => element._id.toString() !== id);
-      result[0].expenses.push(data);
+      result[0].transactions = result[0].transactions.filter((element) => element._id.toString() !== id);
+      result[0].transactions.push(data);
       result[0].save();
     });
   }
 });
+
 app.post("/deleteData", async (req, res) => {
   const property = req.body.property;
   const id = req.body.id;
   const email = req.body.email;
-  if (property === "income") {
+  if (property === "transaction") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].incomes = result[0].incomes.filter((element) => element._id.toString() !== id);
-      result[0].save();
-    });
-  }
-  if (property === "expense") {
-    await Data.find({ email: email }).exec().then((result) => {
-      result[0].expenses = result[0].expenses.filter((element) => element._id.toString() !== id);
+      result[0].transactions = result[0].transactions.filter((element) => element._id.toString() !== id);
       result[0].save();
     });
   }

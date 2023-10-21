@@ -16,10 +16,10 @@ import Fab from '@mui/material/Fab';
 import { Toast } from "primereact/toast";
 import { OverlayPanel } from 'primereact/overlaypanel';
 
-const NewTransaction = ({ addUploadedData, incomeCategories, expenseCategories, addIncome, addExpense }) => {
+const NewTransaction = ({ incomeCategories, expenseCategories, addUploadedData, addTransaction }) => {
     const toast = useRef(null);
     const op = useRef(null);
-    const [newTransactionEntry, setNewTransactionEntry] = useState({ date: "", amount: "", category: "", subCategory: "", description: "" });
+    const [newTransactionEntry, setNewTransactionEntry] = useState({ transactionType: "", date: "", amount: "", category: "", subCategory: "", description: "" });
     const [uploadDialog, setUploadDialog] = useState(false);
     const [incomeDialog, setIncomeDialog] = useState(false);
     const [expenseDialog, setExpenseDialog] = useState(false);
@@ -29,7 +29,7 @@ const NewTransaction = ({ addUploadedData, incomeCategories, expenseCategories, 
     return (
         <div className="position-fixed bottom-0 end-0 m-3" style={{ position: "fixed" }}>
             <Toast ref={toast} position='bottom-right' />
-            <Dialog open={uploadDialog}>
+            {/* <Dialog open={uploadDialog}>
                 <DialogTitle>Upload JSON</DialogTitle>
                 <DialogContent sx={{ m: 0, pb: 0 }}>
                     <div className='container'>
@@ -55,7 +55,7 @@ const NewTransaction = ({ addUploadedData, incomeCategories, expenseCategories, 
                 <DialogActions>
                     <button type="button" className="btn btn-outline-danger" onClick={() => { setUploadDialog(false); }}>Cancel</button>
                 </DialogActions>
-            </Dialog>
+            </Dialog> */}
             <Dialog open={incomeDialog}>
                 <DialogTitle>New Income</DialogTitle>
                 <DialogContent sx={{ m: 0, pb: 0 }}>
@@ -65,9 +65,9 @@ const NewTransaction = ({ addUploadedData, incomeCategories, expenseCategories, 
                             summary: "Income Added",
                             life: 3000
                         });
-                        addIncome(newTransactionEntry);
+                        addTransaction({ ...newTransactionEntry, transactionType: "income" });
                         setIncomeDialog(false);
-                        setNewTransactionEntry({ date: "", amount: "", category: "", subCategory: "", description: "" });
+                        setNewTransactionEntry({ transactionType: "", date: "", amount: "", category: "", subCategory: "", description: "" });
                         event.preventDefault();
                     }}>
                         <div className='container p-0 m-0'>
@@ -77,13 +77,13 @@ const NewTransaction = ({ addUploadedData, incomeCategories, expenseCategories, 
                                         <DatePicker
                                             label="Date"
                                             views={['year', 'month', 'day']}
-                                            format="D/M/YYYY"
+                                            format="DD/MM/YYYY"
                                             onChange={(e) => {
-                                                handleChange({ target: { name: "date", value: e.$D + "-" + (e.$M + 1) + "-" + e.$y } })
+                                                handleChange({ target: { name: "date", value: ((e.$D < 10) ? ("0" + e.$D) : (e.$D)) + "-" + ((e.$M < 9) ? ("0" + (e.$M + 1)) : (e.$M + 1)) + "-" + e.$y } })
                                             }}
                                             autoOk={true}
                                             sx={{ width: "100%" }}
-                                            slotProps={{ textField: { size: 'small' }, field: { shouldRespectLeadingZeros: true } }}
+                                            slotProps={{ textField: { size: 'small' } }}
                                             required
                                         />
                                     </LocalizationProvider>
@@ -127,7 +127,7 @@ const NewTransaction = ({ addUploadedData, incomeCategories, expenseCategories, 
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <button type="button" className="btn btn-outline-danger" onClick={() => { setIncomeDialog(false); setNewTransactionEntry({ date: "", amount: "", category: "", subCategory: "", description: "" }); }}>Cancel</button>
+                    <button type="button" className="btn btn-outline-danger" onClick={() => { setIncomeDialog(false); setNewTransactionEntry({ transactionType: "", date: "", amount: "", category: "", subCategory: "", description: "" }); }}>Cancel</button>
                 </DialogActions>
             </Dialog>
             <Dialog open={expenseDialog}>
@@ -139,7 +139,7 @@ const NewTransaction = ({ addUploadedData, incomeCategories, expenseCategories, 
                             summary: "Expense Added",
                             life: 3000
                         });
-                        addExpense(newTransactionEntry);
+                        addTransaction({ ...newTransactionEntry, transactionType: "expense" });
                         setExpenseDialog(false);
                         setNewTransactionEntry({ date: "", amount: "", category: "", subCategory: "", description: "" });
                         event.preventDefault();
@@ -153,7 +153,7 @@ const NewTransaction = ({ addUploadedData, incomeCategories, expenseCategories, 
                                             views={['year', 'month', 'day']}
                                             format="D/M/YYYY"
                                             onChange={(e) => {
-                                                handleChange({ target: { name: "date", value: e.$D + "-" + (e.$M + 1) + "-" + e.$y } })
+                                                handleChange({ target: { name: "date", value: ((e.$D < 10) ? ("0" + e.$D) : (e.$D)) + "-" + ((e.$M < 9) ? ("0" + (e.$M + 1)) : (e.$M + 1)) + "-" + e.$y } })
                                             }}
                                             autoOk={true}
                                             sx={{ width: "100%" }}
@@ -201,7 +201,7 @@ const NewTransaction = ({ addUploadedData, incomeCategories, expenseCategories, 
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <button type="button" className="btn btn-outline-danger" onClick={() => { setExpenseDialog(false); setNewTransactionEntry({ date: "", amount: "", category: "", subCategory: "", description: "" }); }}>Cancel</button>
+                    <button type="button" className="btn btn-outline-danger" onClick={() => { setExpenseDialog(false); setNewTransactionEntry({ transactionType: "", date: "", amount: "", category: "", subCategory: "", description: "" }); }}>Cancel</button>
                 </DialogActions>
             </Dialog>
             <OverlayPanel ref={op}>

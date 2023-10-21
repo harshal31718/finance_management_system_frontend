@@ -5,8 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Axios from 'axios';
 import Login from './Pages/Login';
 import Home from './Pages/Home'
-import Income from './Pages/Income';
-import Expense from './Pages/Expense'
+import Transactions from './Pages/Transactions';
 import Assets from './Pages/Assets'
 import Liabilities from './Pages/Liabilities'
 import NewTransaction from './components/NewTransaction/NewTransaction';
@@ -16,7 +15,6 @@ import { OverlayPanel } from "primereact/overlaypanel";
 import ViewListIcon from '@mui/icons-material/ViewList';
 import HomeIcon from '@mui/icons-material/Home';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import BusinessIcon from '@mui/icons-material/Business';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -26,8 +24,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   // local useStates
-  const [incomes, setIncomes] = useState([{}]);
-  const [expenses, setExpenses] = useState([{}]);
+  const [transactions, setTransactions] = useState([{}]);
   const [assets, setAssets] = useState([{}]);
   const [liabilities, setLiabilities] = useState([{}]);
   const [incomeCategories, setIncomeCategories] = useState([{}]);
@@ -50,8 +47,7 @@ const App = () => {
         .then(async (result) => {
           const userData = result.data.userData;
           const profile = result.data.profile;
-          setIncomes(userData[0].incomes);
-          setExpenses(userData[0].expenses);
+          setTransactions(userData[0].transactions);
           setAssets(userData[0].assets);
           setLiabilities(userData[0].liabilities);
           setIncomeCategories(userData[0].incomeCategories);
@@ -66,49 +62,29 @@ const App = () => {
     Axios.post("http://localhost:4000/logout");
     setProfile(null);
     setUser(null);
-    setIncomes([{}]);
-    setExpenses([{}]);
+    setTransactions([{}]);
     setAssets([{}]);
     setLiabilities([{}]);
   }
   const addUploadedData = (uploadData) => {
     const data = JSON.parse(uploadData);
-    data.map(obj => {
-      if (obj.credit === null) setExpenses((prev) => [...prev, { date: obj.date, amount: obj.debit, category: "others", subCategory: "others", description: obj.details, }]);
-      else setIncomes((prev) => [...prev, { date: obj.date, amount: obj.credit, category: "others", subCategory: "others", description: obj.details, }]);
-      return 0;
-    });
+    setTransactions((prev) => [...prev, data]);
     Axios.post("http://localhost:4000/addUploadedTransactions", { data, email: profile.email });
   }
-  const addIncome = (data) => {
-    setIncomes((prev) => [...prev, data]);
-    Axios.post("http://localhost:4000/addData", { property: "income", data, email: profile.email });
+  const addTransaction = (data) => {
+    setTransactions((prev) => [...prev, data]);
+    Axios.post("http://localhost:4000/addData", { property: "transaction", data, email: profile.email });
   }
-  const editIncome = (data) => {
-    setIncomes((prev) => {
+  const editTransaction = (data) => {
+    setTransactions((prev) => {
       prev = prev.filter((element) => element._id !== data._id);
       return [...prev, data]
     })
-    Axios.post("http://localhost:4000/editData", { property: "income", data, email: profile.email });
+    Axios.post("http://localhost:4000/editData", { property: "transaction", data, email: profile.email });
   }
-  const deleteIncome = (id) => {
-    setIncomes(() => incomes.filter((element) => element._id !== id));
-    Axios.post("http://localhost:4000/deleteData", { property: "income", id, email: profile.email });
-  }
-  const addExpense = (data) => {
-    setExpenses((prev) => [...prev, data]);
-    Axios.post("http://localhost:4000/addData", { property: "expense", data, email: profile.email });
-  }
-  const editExpense = (data) => {
-    setExpenses((prev) => {
-      prev = prev.filter((element) => element._id !== data._id);
-      return [...prev, data]
-    })
-    Axios.post("http://localhost:4000/editData", { property: "expense", data, email: profile.email });
-  }
-  const deleteExpense = (id) => {
-    setExpenses(() => expenses.filter((element) => element._id !== id));
-    Axios.post("http://localhost:4000/deleteData", { property: "expense", id, email: profile.email });
+  const deleteTransaction = (id) => {
+    setTransactions(() => transactions.filter((element) => element._id !== id));
+    Axios.post("http://localhost:4000/deleteData", { property: "transaction", id, email: profile.email });
   }
   const addAsset = (data) => {
     setAssets((prev) => [...prev, data]);
@@ -183,10 +159,7 @@ const App = () => {
                     <NavLink className="nav-link d-flex align-items-center" to="/"><HomeIcon fontSize="large" /></NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/income"><AddShoppingCartIcon fontSize="large" /></NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/expense"><ShoppingCartCheckoutIcon fontSize="large" /></NavLink>
+                    <NavLink className="nav-link d-flex align-items-center" to="/transactions"><AddShoppingCartIcon fontSize="large" /></NavLink>
                   </li>
                   <li className="nav-item">
                     <NavLink className="nav-link d-flex align-items-center" to="/assets"><BusinessIcon fontSize="large" /></NavLink>
@@ -203,10 +176,7 @@ const App = () => {
                     <NavLink className="nav-link d-flex align-items-center" to="/"><HomeIcon fontSize="large" />Home</NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/income"><AddShoppingCartIcon fontSize="large" />Income</NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link d-flex align-items-center" to="/expense"><ShoppingCartCheckoutIcon fontSize="large" />Expense</NavLink>
+                    <NavLink className="nav-link d-flex align-items-center" to="/transactions"><AddShoppingCartIcon fontSize="large" />Transactions</NavLink>
                   </li>
                   <li className="nav-item">
                     <NavLink className="nav-link d-flex align-items-center" to="/assets"><BusinessIcon fontSize="large" />Assets</NavLink>
@@ -221,16 +191,15 @@ const App = () => {
               </div>
               <div className='flex-grow-1 overflow-auto m-0 p-1' styl>
                 <Routes>
-                  <Route path='/' element={<Home profile={profile} incomes={incomes} expenses={expenses} assets={assets} liabilities={liabilities} />} />
-                  <Route path='/income' element={<Income incomeData={incomes} incomeCategories={incomeCategories} addIncome={addIncome} editIncome={editIncome} deleteIncome={deleteIncome} />} />
-                  <Route path='/expense' element={<Expense expenseData={expenses} expenseCategories={expenseCategories} addExpense={addExpense} editExpense={editExpense} deleteExpense={deleteExpense} />} />
+                  <Route path='/' element={<Home profile={profile} transactions={transactions} assets={assets} liabilities={liabilities} />} />
+                  <Route path='/transactions' element={<Transactions transactions={transactions} incomeCategories={incomeCategories} expenseCategories={expenseCategories} addTransaction={addTransaction} editTransaction={editTransaction} deleteTransaction={deleteTransaction} />} />
                   <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />
                   <Route path='/liabilities' element={<Liabilities liabilitiesData={liabilities} addLiability={addLiability} />} />
                   <Route path='/categories' element={<Categories incomeCategories={incomeCategories} expenseCategories={expenseCategories} addCategory={addCategory} addSubCategory={addSubCategory} />} />
                 </Routes>
               </div>
             </div>
-            <NewTransaction incomeCategories={incomeCategories} expenseCategories={expenseCategories} addUploadedData={addUploadedData} addIncome={addIncome} addExpense={addExpense} />
+            <NewTransaction incomeCategories={incomeCategories} expenseCategories={expenseCategories} addUploadedData={addUploadedData} addTransaction={addTransaction} />
           </div>
         ) : (<Login logIn={logIn} />)}
       </div>

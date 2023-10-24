@@ -6,6 +6,7 @@ import Axios from 'axios';
 import Login from './Pages/Login';
 import Home from './Pages/Home'
 import Transactions from './Pages/Transactions';
+import Budget from './Pages/Budget';
 import Assets from './Pages/Assets'
 import Liabilities from './Pages/Liabilities'
 import NewTransaction from './components/NewTransaction/NewTransaction';
@@ -159,6 +160,7 @@ const App = () => {
                 <ul className="navbar-nav mr-auto m-0 p-0" style={{ display: sideBarToggle ? '' : 'none' }}>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/")} style={{ backgroundColor: (activeLink === "/") ? "blue" : "" }} to="/"><HomeIcon fontSize="large" /></NavLink></li>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/transactions")} style={{ backgroundColor: (activeLink === "/transactions") ? "blue" : "" }} to="/transactions"><i className='pi pi-arrow-right-arrow-left' style={{ fontSize: '2rem' }} /></NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/budget")} style={{ backgroundColor: (activeLink === "/budget") ? "blue" : "" }} to="/budget"><i className='pi pi-wallet' style={{ fontSize: '2rem' }} /></NavLink></li>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/assets")} style={{ backgroundColor: (activeLink === "/assets") ? "blue" : "" }} to="/assets"><BusinessIcon fontSize="large" /></NavLink></li>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/liabilities")} style={{ backgroundColor: (activeLink === "/liabilities") ? "blue" : "" }} to="/liabilities"><DirectionsCarIcon fontSize="large" /></NavLink></li>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/categories")} style={{ backgroundColor: (activeLink === "/categories") ? "blue" : "" }} to="/categories"><CategoryIcon fontSize="large" /></NavLink></li>
@@ -166,6 +168,7 @@ const App = () => {
                 <ul className="navbar-nav mr-auto m-0 p-0" style={{ display: !sideBarToggle ? '' : 'none' }}>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/")} style={{ backgroundColor: (activeLink === "/") ? "blue" : "" }} to="/"><HomeIcon fontSize="large" />Home</NavLink></li>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/transactions")} style={{ backgroundColor: (activeLink === "/transactions") ? "blue" : "" }} to="/transactions"><i className='pi pi-arrow-right-arrow-left' style={{ fontSize: '2rem' }} />Transactions</NavLink></li>
+                  <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/budget")} style={{ backgroundColor: (activeLink === "/budget") ? "blue" : "" }} to="/budget"><i className='pi pi-wallet' style={{ fontSize: '2rem' }} />Budget</NavLink></li>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/assets")} style={{ backgroundColor: (activeLink === "/assets") ? "blue" : "" }} to="/assets"><BusinessIcon fontSize="large" />Assets</NavLink></li>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/liabilities")} style={{ backgroundColor: (activeLink === "/liabilities") ? "blue" : "" }} to="/liabilities"><DirectionsCarIcon fontSize="large" />Liabilities</NavLink></li>
                   <li className="nav-item"><NavLink className="nav-link d-flex align-items-center m-0 p-2" onClick={() => setActiveLink("/categories")} style={{ backgroundColor: (activeLink === "/categories") ? "blue" : "" }} to="/categories"><CategoryIcon fontSize="large" />Categories</NavLink></li>
@@ -175,6 +178,7 @@ const App = () => {
                 <Routes>
                   <Route path='/' element={<Home profile={profile} transactions={transactions} assets={assets} liabilities={liabilities} />} />
                   <Route path='/transactions' element={<Transactions transactions={transactions} incomeCategories={incomeCategories} expenseCategories={expenseCategories} addTransaction={addTransaction} editTransaction={editTransaction} deleteTransaction={deleteTransaction} />} />
+                  <Route path='/budget' element={<Budget incomeCategories={incomeCategories} expenseCategories={expenseCategories} />} />
                   <Route path='/assets' element={<Assets assetsData={assets} addAsset={addAsset} />} />
                   <Route path='/liabilities' element={<Liabilities liabilitiesData={liabilities} addLiability={addLiability} />} />
                   <Route path='/categories' element={<Categories incomeCategories={incomeCategories} expenseCategories={expenseCategories} addCategory={addCategory} addSubCategory={addSubCategory} />} />

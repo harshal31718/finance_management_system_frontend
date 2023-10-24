@@ -50,14 +50,16 @@ const dataSchema = new mongoose.Schema({
     monthlyIncome: Number,
     note: String,
   }],
-  incomeCategories: [{
-    category: String,
-    subCategories: [String],
-  }],
-  expenseCategories: [{
-    category: String,
-    subCategories: [String]
-  }]
+  categories: {
+    incomeCategories: [{
+      category: String,
+      subCategories: [String],
+    }],
+    expenseCategories: [{
+      category: String,
+      subCategories: [String]
+    }]
+  }
 });
 const Data = mongoose.model("Data", dataSchema);
 
@@ -87,16 +89,16 @@ const defaultData = {
     date: "12-10-2023",
     name: "2-bhk,Godda",
     initialAmount: "2500000",
-    decription: "given for rental",
     monthlyMaintainance: "1000",
     monthlyIncome: "13000",
+    decription: "given for rental",
     note: "profitable",
   }, {
     date: "13-10-2023",
     name: "1-bhk,Nagpur",
-    decription: "given for rental",
     initialAmount: "1250000",
     monthlyMaintainance: "500",
+    decription: "given for rental",
     monthlyIncome: "10000",
     note: "profitable",
   }],
@@ -109,16 +111,18 @@ const defaultData = {
     monthlyIncome: "0",
     note: "bike for daily use",
   }],
-  incomeCategories: [
-    { category: "job", subCategories: ["TCS", "google"] },
-    { category: "stock", subCategories: ["axisBank", "tataMotors", "hdfc"] },
-    { category: "realestate", subCategories: ["bunglow", "2bhk", "3,bhk"] }
-  ],
-  expenseCategories: [
-    { category: "Home", subCategories: ["mother", "brother"] },
-    { category: "Living", subCategories: ["rent", "food"] },
-    { category: "travel", subCategories: ["daily", "homeTravel"] },
-  ]
+  categories: {
+    incomeCategories: [
+      { category: "job", subCategories: ["TCS", "google"] },
+      { category: "stock", subCategories: ["axisBank", "tataMotors", "hdfc"] },
+      { category: "realestate", subCategories: ["bunglow", "2bhk", "3,bhk"] }
+    ],
+    expenseCategories: [
+      { category: "Home", subCategories: ["mother", "brother"] },
+      { category: "Living", subCategories: ["rent", "food"] },
+      { category: "travel", subCategories: ["daily", "homeTravel"] },
+    ]
+  }
 }
 
 let prevUser = null;
@@ -151,8 +155,7 @@ app.get("/login", async (req, res) => {
             transactions: defaultData.transactions,
             assets: defaultData.assets,
             liabilities: defaultData.liabilities,
-            incomeCategories: defaultData.incomeCategories,
-            expenseCategories: defaultData.expenseCategories
+            categories: defaultData.categories
           });
           Data.find({ email: profile.email }).exec().then((userData) => res.send({ userData, profile }));
         } else {
@@ -207,17 +210,17 @@ app.post("/addData", async (req, res) => {
     });
   } else if (property === "incomeCategories") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].incomeCategories.push(newdata);
+      result[0].categories.incomeCategories.push(newdata);
       result[0].save();
     })
   } else if (property === "expenseCategories") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].expenseCategories.push(newdata);
+      result[0].categories.expenseCategories.push(newdata);
       result[0].save();
     })
   } else if (property === "incomeSubCategories") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].incomeCategories.map((element) => {
+      result[0].categories.incomeCategories.map((element) => {
         if (element.category === newdata.category)
           element.subCategories.push(newdata.subCategory);
         return 0;
@@ -226,7 +229,7 @@ app.post("/addData", async (req, res) => {
     })
   } else if (property === "expenseSubCategories") {
     await Data.find({ email: email }).exec().then((result) => {
-      result[0].expenseCategories.map((element) => {
+      result[0].categories.expenseCategories.map((element) => {
         if (element.category === newdata.category)
           element.subCategories.push(newdata.subCategory);
         return 0;

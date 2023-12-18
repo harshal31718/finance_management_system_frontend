@@ -22,6 +22,7 @@ import 'primeicons/primeicons.css';
 
 
 const App = () => {
+  const port_url = process.env.REACT_APP_PORT_URL;
   // google useStates
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -41,12 +42,12 @@ const App = () => {
   });
   useEffect(() => {
     if (!user) {
-      Axios.get("http://localhost:4000/user").then((result) => {
+      Axios.get(`${port_url}/user`).then((result) => {
         setUser(result.data);
       }).catch((error) => { error = new Error(); });
     }
     if (user) {
-      Axios.get("http://localhost:4000/login", { params: { user: user } })
+      Axios.get(`${port_url}/login`, { params: { user: user } })
         .then(async (result) => {
           const userData = result.data.userData;
           const profile = result.data.profile;
@@ -62,7 +63,7 @@ const App = () => {
   }, [user]);
   const logOut = () => {
     googleLogout();
-    Axios.post("http://localhost:4000/logout");
+    Axios.post(`${port_url}/logout`);
     setProfile(null);
     setUser(null);
     setTransactions([{}]);
@@ -72,39 +73,39 @@ const App = () => {
   const addUploadedTransactions = (uploadData) => {
     const data = JSON.parse(uploadData);
     setTransactions((prev) => [...prev, ...data]);
-    Axios.post("http://localhost:4000/addUploadedTransactions", { data, email: profile.email });
+    Axios.post(`${port_url}/addUploadedTransactions`, { data, email: profile.email });
   }
   const addTransaction = (data) => {
     setTransactions((prev) => [...prev, data]);
-    Axios.post("http://localhost:4000/addData", { property: "transaction", data, email: profile.email });
+    Axios.post(`${port_url}/addData`, { property: "transaction", data, email: profile.email });
   }
   const editTransaction = (data) => {
     setTransactions((prev) => {
       prev = prev.filter((element) => element._id !== data._id);
       return [...prev, data]
     })
-    Axios.post("http://localhost:4000/editData", { property: "transaction", data, email: profile.email });
+    Axios.post(`${port_url}/editData`, { property: "transaction", data, email: profile.email });
   }
   const deleteTransaction = (id) => {
     setTransactions(() => transactions.filter((element) => element._id !== id));
-    Axios.post("http://localhost:4000/deleteData", { property: "transaction", id, email: profile.email });
+    Axios.post(`${port_url}/deleteData`, { property: "transaction", id, email: profile.email });
   }
   const addAsset = (data) => {
     setAssets((prev) => [...prev, data]);
-    Axios.post("http://localhost:4000/addData", { property: "asset", data, email: profile.email });
+    Axios.post(`${port_url}/addData`, { property: "asset", data, email: profile.email });
   }
   const addLiability = (data) => {
     setLiabilities((prev) => [...prev, data]);
-    Axios.post("http://localhost:4000/addData", { property: "liability", data, email: profile.email });
+    Axios.post(`${port_url}/addData`, { property: "liability", data, email: profile.email });
   }
   const addCategory = (newCategory, type) => {
     if (type === "income") {
       setIncomeCategories((prev) => [...prev, newCategory])
-      Axios.post("http://localhost:4000/addData", { property: "incomeCategories", data: newCategory, email: profile.email });
+      Axios.post(`${port_url}/addData`, { property: "incomeCategories", data: newCategory, email: profile.email });
     }
     else if (type === "expense") {
       setExpenseCategories((prev) => [...prev, newCategory])
-      Axios.post("http://localhost:4000/addData", { property: "expenseCategories", data: newCategory, email: profile.email });
+      Axios.post(`${port_url}/addData`, { property: "expenseCategories", data: newCategory, email: profile.email });
     }
   }
   const addSubCategory = (newSubCategory, type) => {
@@ -116,7 +117,7 @@ const App = () => {
         })
         return prev;
       })
-      Axios.post("http://localhost:4000/addData", { property: "incomeSubCategories", data: newSubCategory, email: profile.email });
+      Axios.post(`${port_url}/addData`, { property: "incomeSubCategories", data: newSubCategory, email: profile.email });
     }
     else if (type === "expense") {
       setExpenseCategories((prev) => {
@@ -126,7 +127,7 @@ const App = () => {
         })
         return prev;
       })
-      Axios.post("http://localhost:4000/addData", { property: "expenseSubCategories", data: newSubCategory, email: profile.email });
+      Axios.post(`${port_url}/addData`, { property: "expenseSubCategories", data: newSubCategory, email: profile.email });
     }
   }
 

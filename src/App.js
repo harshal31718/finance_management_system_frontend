@@ -41,11 +41,6 @@ const App = () => {
     onError: (error) => console.log('Login Failed:', error)
   });
   useEffect(() => {
-    if (!user) {
-      Axios.get(`${port_url}/user`).then((result) => {
-        setUser(result.data);
-      }).catch((error) => { error = new Error(); });
-    }
     if (user) {
       Axios.get(`${port_url}/login`, { params: { user: user } })
         .then(async (result) => {
@@ -63,7 +58,6 @@ const App = () => {
   }, [user]);
   const logOut = () => {
     googleLogout();
-    Axios.post(`${port_url}/logout`);
     setProfile(null);
     setUser(null);
     setTransactions([{}]);
